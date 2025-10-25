@@ -1,0 +1,80 @@
+h1,h2,h3,h4,p,button{
+    font-family: heebo;
+    direction: rtl;
+    margin:0;
+}
+
+head,body{
+    margin: 0;
+
+}
+
+/*Hero section*/
+.hero_class{
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    height: 85vh;
+    width: 100%;
+    padding: 20px;
+    background: #131060;
+    background: radial-gradient(circle farthest-corner at center center, #131060 0%, #100D58 50%, #06033E 100%);
+}
+
+.right_container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+}
+
+.left_container{
+    display: flex;
+    flex-direction: column;
+    align-items: right;
+    width: 45%;
+}
+
+.hero_h{
+    color:#fff;
+    font-size: 70px;
+    font-weight: 700;
+    line-height: 1.2em;
+    
+}
+.hero_p{
+    color:#5761d7;
+    font-size: 25px;
+    
+}
+
+.hero_b{
+    margin-top:10px;
+    padding: 10px 30px 10px 30px;
+    align-self: flex-end;
+    border-radius: 25px;
+    border: 0;
+    color: #fff;
+    font-weight: 700;
+    font-size: 20px;
+    background: #E39A65;
+    background: linear-gradient(to left, #E39A65 0%, #A92FFB 35%, #6507FA 60%, #4B12D5 80%, #3919BB 100%);
+}
+
+/*strength section*/
+.strengths_c{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 55vh;
+    width: 100%;
+    padding: 20px;
+   }
+
+.strengths_h{
+    font-size: 45px;
+}
+.strengths_p{
+    font-size: 25px;
+}
