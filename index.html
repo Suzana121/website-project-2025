@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <title>פורטל קורסים - API</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        #youtubeTitle { font-weight: bold; }
+        #youtubeDescription { margin-bottom: 20px; }
+        #weather { margin-top: 20px; font-size: 18px; }
+        iframe { margin-top: 10px; width: 560px; height: 315px; }
+    </style>
+</head>
+<body>
+    <h1>ברוכים הבאים לפורטל הקורסים</h1>
+
+    <!--weather-->
+    <div id="weather">
+        <div id="weatherSection">
+            <h2 id="weatherCity"></h2>
+            <p id="weatherTemp"></p>
+            <p id="weatherDesc"></p>
+        </div>
+    </div>
+
+    <!--YouTube -->
+    <div id="youtubeSection">
+        <h3 id="youtubeTitle"></h3>
+        <p id="youtubeDescription"></p>
+        <!-- ה‑iframe יווצר כאן ע"י youtube.js -->
+    </div>
+
+    <!--חיבור הקבצים -->
+    <script src="youtube.js"></script>
+    <script src="weather.js"></script>
+</body>
+</html>
