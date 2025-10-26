@@ -7,7 +7,7 @@ async function fetchYouTubeVideo(videoId)
     try {
         const response = await fetch(url);
         const data = await response.json();
-        console.log(data); //  בדיקה אם המפתח עובד
+        console.log(data); // בדיקה אם המפתח עובד
         const title = data.items[0].snippet.title;
         const description = data.items[0].snippet.description;
 
