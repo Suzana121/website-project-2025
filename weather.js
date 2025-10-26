@@ -1,25 +1,30 @@
-async function fetchWeather(city) {
-    const apiKey = "e3311e17923753e9ba49963fe4a687dd"; // כאן תכניסי את המפתח
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=he`;
+
+async function fetchYouTubeVideo(videoId) 
+{
+    const apiKey = "AIzaSyCrCJQqXjiLJgsh2tcRluFsfP-aBpVrxLo"; // <-- מפתח
+    const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet`;
 
     try {
         const response = await fetch(url);
         const data = await response.json();
-        console.log(data);
+        console.log(data); //  בדיקה אם המפתח עובד
+        const title = data.items[0].snippet.title;
+        const description = data.items[0].snippet.description;
 
-        // הצגת מידע בדף
-        document.getElementById("weatherCity").innerText = data.name;
-        document.getElementById("weatherTemp").innerText = `${data.main.temp}°C`;
-        document.getElementById("weatherDesc").innerText = data.weather[0].description;
+        document.getElementById("youtubeTitle").innerText = title;
+        document.getElementById("youtubeDescription").innerText = description;
+        const videoFrame = document.createElement("iframe");
+videoFrame.src = `https://www.youtube.com/embed/${videoId}`;
+videoFrame.width = "560";
+videoFrame.height = "315";
+videoFrame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+document.getElementById("youtubeSection").appendChild(videoFrame);
 
     } catch (error) {
-        console.error("שגיאה ב-Weather API:", error);
-        // הצגת הודעה ידידותית למשתמש במקום הריק
-        document.getElementById("weatherCity").innerText = "לא הצלחנו לטעון את מזג האוויר";
-        document.getElementById("weatherTemp").innerText = "";
-        document.getElementById("weatherDesc").innerText = "";
+        console.error("שגיאה ב-YouTube API:", error);
     }
 }
 
-// קריאה לדוגמה
-fetchWeather("Tel Aviv");
+// קריאה לפונקציה עם מזהה סרטון לדוגמה
+fetchYouTubeVideo("eGR2Yf6yBRA");
+

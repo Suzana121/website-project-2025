@@ -1,12 +1,13 @@
 
-async function fetchYouTubeVideo(videoId) {
-    const apiKey = "AIzaSyCrCJQqXjiLJgsh2tcRluFsfP-aBpVrxLo"; // <-- כאן המפתח
+async function fetchYouTubeVideo(videoId) 
+{
+    const apiKey = "AIzaSyCrCJQqXjiLJgsh2tcRluFsfP-aBpVrxLo"; // <-- מפתח
     const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet`;
 
     try {
         const response = await fetch(url);
         const data = await response.json();
-        console.log(data); // כאן ניתן לראות אם המפתח עובד
+        console.log(data); //  בדיקה אם המפתח עובד
         const title = data.items[0].snippet.title;
         const description = data.items[0].snippet.description;
 
@@ -25,5 +26,5 @@ document.getElementById("youtubeSection").appendChild(videoFrame);
 }
 
 // קריאה לפונקציה עם מזהה סרטון לדוגמה
-fetchYouTubeVideo("Yv5PqqYHiec");
+fetchYouTubeVideo("eGR2Yf6yBRA");
 
