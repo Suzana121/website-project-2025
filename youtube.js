@@ -14,11 +14,6 @@ async function fetchYouTubeVideo(videoId)
         document.getElementById("youtubeTitle").innerText = title;
         document.getElementById("youtubeDescription").innerText = description;
         const videoFrame = document.createElement("iframe");
-videoFrame.src = `https://www.youtube.com/embed/${videoId}`;
-videoFrame.width = "560";
-videoFrame.height = "315";
-videoFrame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-document.getElementById("youtubeSection").appendChild(videoFrame);
 
     } catch (error) {
         console.error("שגיאה ב-YouTube API:", error);
