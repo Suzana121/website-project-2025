@@ -8,13 +8,84 @@ head,body{
     margin: 0;
 
 }
+button{
+    margin-top:10px;
+    padding: 10px 30px 10px 30px;
+    border-radius: 25px;
+    border: 0;
+    color: #fff;
+    font-weight: 700;
+    font-size: 20px;
+    background: #E39A65;
+    background: linear-gradient(to left, #E39A65 0%, #A92FFB 35%, #6507FA 60%, #4B12D5 80%, #3919BB 100%);
+}
+
+.site-header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 25px;
+    margin-top: 50px;
+    margin-bottom: -150px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin: 0 auto;
+    
+}
+
+.main-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.header-cta {
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    border: none;
+    background-color: #6507fa;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.header-cta:hover {
+    background-color: #a92ffb;
+}
+
+.logo {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: #333;
+}
+
+.main-nav a:hover {
+    color: #6507fa;
+}
+
 
 /*Hero section*/
 .hero_class{
+    z-index: 1;
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
-    height: 85vh;
+    height: 100vh;
     width: 100%;
     padding: 20px;
     background: #131060;
@@ -47,28 +118,21 @@ head,body{
     font-size: 25px;
     
 }
-
 .hero_b{
-    margin-top:10px;
-    padding: 10px 30px 10px 30px;
     align-self: flex-end;
-    border-radius: 25px;
-    border: 0;
-    color: #fff;
-    font-weight: 700;
-    font-size: 20px;
-    background: #E39A65;
-    background: linear-gradient(to left, #E39A65 0%, #A92FFB 35%, #6507FA 60%, #4B12D5 80%, #3919BB 100%);
+
 }
 
-/*strength section*/
+
+
+/*sec 2 */
 .strengths_c{
     padding-top: 150px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 75vh;
+    height:100vh;
     width: 100%;
     padding: 20px;
     gap:40px;
@@ -86,7 +150,7 @@ head,body{
     flex-direction: column;
     align-items: center;
 }
-.strengths_h{
+h2{
     color:white;
     font-size: 45px;
 }
@@ -117,4 +181,21 @@ head,body{
 .lotti-txt{
     color: #d1cfff;
     text-align: center;
+}
+
+/*sec 3*/
+.why-us{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #06033E;
+    gap:25px;
+}
+.why-us-txt{
+    color:white;
+    font-size: 25px;
+    text-align: center;
+    width:50%;
 }
