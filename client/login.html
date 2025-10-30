@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>התחברות למערכת</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <a href="homePage.html" class="back-button">
+        חזרה לעמוד הבית
+    </a>
+
+    <div class="container">
+        <div class="form-box">
+            <h2 id="form-title">התחברות למערכת</h2>
+
+            <div class="tab-buttons">
+                <button class="tab-button active" id="login-tab">התחברות</button>
+                <button class="tab-button" id="register-tab">הרשמה</button>
+            </div>
+
+            <div id="message" class="message hidden"></div>
+
+            <div id="login-form" class="form-content active">
+                <div class="form-group">
+                    <label for="login-id">תעודת זהות</label>
+                    <input type="tel" id="login-id" maxlength="9" placeholder="123456789" class="id-input" required>
+                    <p class="id-counter"><span id="login-id-count">0</span>/9 ספרות <span id="login-id-valid"></span></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">סיסמה</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+
+                <button class="submit-button" id="login-button">התחבר</button>
+                <button class="forgot-password-link" id="forgot-password-button">שכחתי סיסמה</button>
+            </div>
+
+            <div id="register-form" class="form-content">
+                <div class="form-group">
+                    <label for="register-id">תעודת זהות</label>
+                    <input type="tel" id="register-id" maxlength="9" placeholder="123456789" class="id-input" required>
+                    <p class="id-counter"><span id="register-id-count">0</span>/9 ספרות <span id="register-id-valid"></span></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-name">שם מלא</label>
+                    <input type="text" id="register-name" placeholder="הזן את שמך המלא" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-email">אימייל</label>
+                    <input type="email" id="register-email" placeholder="example@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-password">סיסמה</label>
+                    <input type="password" id="register-password" placeholder="••••••••" required minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label for="register-confirm-password">אימות סיסמה</label>
+                    <input type="password" id="register-confirm-password" placeholder="••••••••" required>
+                </div>
+
+                <button class="submit-button" id="register-button">הירשם</button>
+            </div>
+
+            <div id="forgot-password-form" class="form-content">
+                <p class="forgot-subtitle">הזן את תעודת הזהות שלך ונשלח לך קישור לאיפוס הסיסמה למייל</p>
+                
+                <div class="form-group">
+                    <label for="forgot-id">תעודת זהות</label>
+                    <input type="tel" id="forgot-id" maxlength="9" placeholder="123456789" class="id-input" required>
+                    <p class="id-counter"><span id="forgot-id-count">0</span>/9 ספרות</p>
+                </div>
+
+                <button class="submit-button" id="forgot-submit-button">שלח קישור לאיפוס סיסמה</button>
+                <button class="forgot-password-link" id="back-to-login-button">חזרה להתחברות</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>

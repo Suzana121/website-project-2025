@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ניהול משתמשים - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ניהול משתמשים</h1>
+            <button onclick="logout()" class="logout-btn">התנתק</button>
+        </div>
+
+        <div id="message" class="message hidden"></div>
+
+        <div class="users-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>שם</th>
+                        <th>אימייל</th>
+                        <th>תעודת זהות</th>
+                        <th>תפקיד נוכחי</th>
+                        <th>שינוי תפקיד</th>
+                        <th>פעולות</th>
+                    </tr>
+                </thead>
+                <tbody id="users-list">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 20px;">טוען נתונים...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
