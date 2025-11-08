@@ -97,7 +97,7 @@ html {
     align-items: center;
     height: 100vh;
     width: 100%;
-    padding: 20px;
+    padding: 100px 20px;
     background: #131060;
     background: radial-gradient(circle farthest-corner at center center, #131060 0%, #100D58 50%, #06033E 100%);
 }
