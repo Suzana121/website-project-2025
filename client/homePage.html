@@ -31,7 +31,8 @@
             <p class="hero_p">
                 קורסי פיתוח אתרים יכולים לעזור לך ללמוד כיצד לבנות ולתחזק אתרי אינטרנט ויישומי אינטרנט באמצעות כלים כמו HTML, CSS ו-JavaScript.
             </p>
-            <button class="hero_b">התחילו עכשיו</button>
+           <button class="hero_b" onclick="location.href='api/index.html'">התחילו עכשיו</button>
+
         </div>        
     </div>
     <div class="strengths_c" id="sec2">
@@ -91,5 +92,16 @@
 
     <script src="main.js" defer></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
+
+    <!-- Weather: top-right -->
+  <div id="weather" class="weather-text" dir="rtl">
+  <span id="weatherCity"></span>
+  <span id="weatherTemp"></span>
+  <span id="weatherDesc"></span>
+</div>
+
+<!-- בסוף ה-body: -->
+<script src="api/weather.js" defer></script>
+
 </body>
 </html>

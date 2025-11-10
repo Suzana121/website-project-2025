@@ -25,20 +25,18 @@ html {
 }
 
 .site-header {
-    display: flex;
-    position: sticky;
-    top: 50px;
-    align-items: center;
-    width: 1400px;
-    background-color: white;
-    padding: 20px 40px 20px 40px;
-    border-radius: 50px;
-    margin-top: 50px;
-    margin-bottom: -150px;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 9999;
+  display: flex;
+  position: sticky;
+  top: 70px;                 /* קצת קרוב יותר לראש הדף */
+  align-items: center;
+  justify-content: space-between;
+  width: min(1100px, calc(100% - 60px)); /* קצת צר יותר */
+  background-color: #fff;
+  padding: 6px 25px;         /* ⬅️ הקטנה משמעותית של הגובה */
+  border-radius: 25px;       /* ⬅️ עיגול עדין בלבד */
+  margin: 30px auto -80px;   /* ⬅️ פחות רווח חיצוני */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  z-index: 9999;
 }
 
 .header-container {
@@ -73,10 +71,11 @@ html {
 }
 
 .logo {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    font-family: heebo;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-family: "Heebo", sans-serif;
+  font-size: 22px; /* ⬅️ כאן קובעים את הגודל */
 }
 
 .main-nav a {
@@ -208,4 +207,21 @@ h2{
     font-size: 25px;
     text-align: center;
     width:50%;
+}
+
+
+/* ===== Weather text clean style ===== */
+.weather-text {
+  position: absolute;
+  top: 80px;          /* קצת מתחת ל-header */
+  right: 20px;        /* צמוד לצד ימין */
+  color: white;       /* צבע טקסט */
+  font-family: "Heebo", sans-serif;
+  font-size: 15px;
+  text-align: right;
+  z-index: 50;        /* מעל שאר האלמנטים */
+}
+
+.weather-text span {
+  margin-left: 8px;   /* רווח קטן בין חלקי הטקסט */
 }
