@@ -421,7 +421,7 @@ h2 {
   right: 20px;        /* צמוד לצד ימין */
   color: white;       /* צבע טקסט */
   font-family: "Heebo", sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   text-align: right;
   z-index: 50;        /* מעל שאר האלמנטים */
 }

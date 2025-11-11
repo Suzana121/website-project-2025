@@ -214,7 +214,7 @@ h2{
 .weather-text {
   position: absolute;
   top: 80px;          /* קצת מתחת ל-header */
-  right: 20px;        /* צמוד לצד ימין */
+  right: 15px;        /* צמוד לצד ימין */
   color: white;       /* צבע טקסט */
   font-family: "Heebo", sans-serif;
   font-size: 15px;

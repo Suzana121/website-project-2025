@@ -329,16 +329,16 @@ async function fetchWeatherByCoords(lat, lon)
         let message = "";
         let color = "";
 
-        if (temperature >= 0 && temperature <= 10) {
+        if (temperature >= 0 && temperature <= 10.99) {
             message = "קריר בחוץ ❄️!";
             color = "blue";
-        } else if (temperature >= 11 && temperature <= 15) {
+        } else if (temperature >= 11 && temperature <= 15.99) {
             message = "מזג אוויר נעים קצת קריר 🍂";
             color = "teal";
-        } else if (temperature >= 16 && temperature <= 22) {
+        } else if (temperature >= 16 && temperature <= 22.99) {
             message = "מזג אוויר נעים 🌤️!";
             color = "green";
-        } else if (temperature >= 23 && temperature <= 30) {
+        } else if (temperature >= 23 && temperature <= 30.99) {
             message = "חם בחוץ 🔥!";
             color = "orange";
         } else {
