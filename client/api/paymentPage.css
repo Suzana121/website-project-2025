@@ -1,0 +1,229 @@
+:root {
+    --card-bg: #f8f9fa; /* Updated background color */
+    --muted: #6c757d; /* Updated muted color */
+    --accent: #28a745; /* Updated accent color */
+    --max-width: 1200px; /* Updated max width */
+}
+
+body {
+    font-family: 'Heebo', sans-serif; /* Updated font family */
+    direction: rtl;
+    margin: 0;
+}
+
+/* Layout as flex */
+.checkout {
+    display: flex;
+    gap: 24px;
+    max-width: var(--max-width);
+    margin: 32px auto;
+    align-items: flex-start;
+    padding: 0 16px;
+}
+
+.left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.right {
+    width: 380px;
+    min-width: 260px;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); /* Slightly darker shadow */
+}
+
+.courses-header,
+.payment h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.5rem; /* Updated font size */
+}
+
+/* Larger course showcase cards */
+.course {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    border-radius: 10px;
+    padding: 14px;
+    background: linear-gradient(180deg, #ffffff, #f1f1f1); /* Updated gradient */
+    border: 1px solid #e0e0e0; /* Updated border color */
+    transition: transform 0.2s ease;
+}
+
+.course:hover {
+    transform: scale(1.05);
+}
+
+.thumb {
+    width: 160px;
+    min-width: 160px;
+    height: 110px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #e9eefc, #f7faff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2a3b8a;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-align: center;
+    padding: 8px;
+}
+
+.course-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.course-title {
+    margin: 0;
+    font-size: 1.2rem; /* Updated font size */
+    font-weight: 700;
+}
+
+.course-desc {
+    margin: 0;
+    color: var(--muted);
+    font-size: 1rem; /* Updated font size */
+    line-height: 1.25;
+}
+
+.course-meta {
+    display: flex;
+    gap: 12px;
+    color: #444;
+    font-size: 0.9rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.course-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+    min-width: 140px;
+    text-align: left;
+}
+
+.price {
+    font-weight: 800;
+    color: #111;
+    font-size: 1.1rem; /* Updated font size */
+}
+
+.remove-btn,
+.add-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 6px 8px;
+    border-radius: 6px;
+}
+
+.remove-btn {
+    color: #c33;
+}
+
+.add-btn {
+    color: var(--accent);
+}
+
+.summary {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.small {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Payment form */
+.payment form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="number"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.pay-btn {
+    margin-top: 10px;
+    padding: 10px 30px;
+    border-radius: 25px;
+    border: 0;
+    color: #fff;
+    font-weight: 700;
+    font-size: 20px;
+    background: linear-gradient(to left, #E39A65 0%, #A92FFB 35%, #6507FA 60%, #4B12D5 80%, #3919BB 100%);
+    cursor: pointer;
+}
+
+.pay-btn:disabled {
+    background: #9ec1ff;
+    cursor: not-allowed;
+}
+
+.notice {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    background: #f0f9f7;
+    color: #065f46;
+    display: none;
+}
+
+/* Two-column inside left: chosen + bonus */
+.lists {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+}
+
+.lists > .card {
+    flex: 1;
+    padding: 14px;
+}
+
+@media (max-width: 880px) {
+    .checkout {
+        flex-direction: column;
+        padding: 18px;
+    }
+
+    .thumb {
+        width: 120px;
+        min-width: 120px;
+        height: 90px;
+    }
+
+    .right {
+        width: 100%;
+    }
+
+    .lists {
+        flex-direction: column;
+    }
+}
