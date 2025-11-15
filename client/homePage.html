@@ -12,13 +12,13 @@
             <a class="logo" href="#sec1">המסע למפתח המצליח</a>
             <nav class="main-nav" aria-label="תפריט ראשי">
                 <ul>
-                    <li><a href="#sec1">ראשי</a></li>
                     <li><a href="#sec2">יתרונות</a></li>
                     <li><a href="#sec3">למה לבחור בנו</a></li>
+                    <li><a href="#sec4">הקורסים שלנו</a></li>
                     <a href="profile.html">הפרופיל שלי</a>
                 </ul>
             </nav>
-            <button class="header-cta" onclick="location.href='#sec3'">הצטרפו</button>
+            <button class="header-cta" onclick="location.href='login.html'">התחברות</button>
         </div>
     </header>
     <div class="hero_class" id="sec1">
@@ -32,7 +32,7 @@
             <p class="hero_p">
                 קורסי פיתוח אתרים יכולים לעזור לך ללמוד כיצד לבנות ולתחזק אתרי אינטרנט ויישומי אינטרנט באמצעות כלים כמו HTML, CSS ו-JavaScript.
             </p>
-           <button class="hero_b" onclick="location.href='api/index.html'">התחילו עכשיו</button>
+           <button class="hero_b" onclick="location.href='#sec2 '">התחילו עכשיו</button>
 
         </div>        
     </div>
@@ -87,8 +87,45 @@
     <div class="why-us" id="sec3">
         <h2>למה לך לקחת את הקורסים שלנו?</h2>
         <p class="why-us-txt">הקורסים שלנו תוכננו ונבנו בקפידה כדי להבטיח את המסלול היעיל והטוב ביותר עבורך. אנו משלבים הסברים מעמיקים ושיטות עבודה ייחודיות, שלא תמצאו בשום מקור לימוד אחר, ומבטיחים הצלחה והבנה מלאה.</p>
-        <button class="why-us-b">למה אתם מחכים?</button>
     </div>
+
+
+    <div class="courses-section" id="sec4">
+    <h2>הקורסים שלנו</h2>
+    <p class="courses-intro">
+        בחרו את הקורס שאתם רוצים ללמוד והתחילו את המסע שלכם כמפתחים מקצועיים.
+    </p>
+
+    <div class="courses-cards">
+        <!-- כרטיס 1 -->
+        <div class="course-card" data-id="1" data-price="349">
+            <img src="assets/html css.png" alt="HTML & CSS">
+            <h3>HTML & CSS</h3>
+            <p>למדו לבנות ממשקי ווב מודרניים ורספונסיביים עם HTML ו-CSS.</p>
+            <div class="course-price">₪349</div>
+            <button class="buy-btn">קנו עכשיו</button>
+        </div>
+
+        <!-- כרטיס 2 -->
+        <div class="course-card" data-id="2" data-price="499">
+            <img src="assets/js.png" alt="JavaScript">
+            <h3>JavaScript</h3>
+            <p>הבינו את היסודות והשימושים המתקדמים של JavaScript בעבודה עם DOM ואסינכרוניות.</p>
+            <div class="course-price">₪499</div>
+            <button class="buy-btn">קנו עכשיו</button>
+        </div>
+
+        <!-- כרטיס 3 -->
+        <div class="course-card" data-id="3" data-price="599">
+            <img src="assets/nodejs.png" alt="React">
+            <h3>React</h3>
+            <p>פיתוח אפליקציות מודרניות עם React – ניהול סטייט, נתיבים ופרויקטים מלאים.</p>
+            <div class="course-price">₪599</div>
+            <button class="buy-btn">קנו עכשיו</button>
+        </div>
+    </div>
+</div>
+
     
 
     <script src="main.js" defer></script>

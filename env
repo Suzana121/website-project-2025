@@ -1,2 +1,0 @@
-PORT=5000
-MONGO_URI=mongodb+srv://projectUser:Course123@cluster0.dtlfveb.mongodb.net/online_courses

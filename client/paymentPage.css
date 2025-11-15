@@ -1,17 +1,16 @@
 :root {
-    --card-bg: #f8f9fa; /* Updated background color */
-    --muted: #6c757d; /* Updated muted color */
-    --accent: #28a745; /* Updated accent color */
-    --max-width: 1200px; /* Updated max width */
+    --card-bg: #f8f9fa;
+    --muted: #6c757d;
+    --accent: #28a745;
+    --max-width: 1200px;
 }
 
 body {
-    font-family: 'Heebo', sans-serif; /* Updated font family */
+    font-family: 'Heebo', sans-serif;
     direction: rtl;
     margin: 0;
 }
 
-/* Layout as flex */
 .checkout {
     display: flex;
     gap: 24px;
@@ -38,24 +37,23 @@ body {
     border: 1px solid #e6e6e6;
     border-radius: 12px;
     padding: 18px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); /* Slightly darker shadow */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
 .courses-header,
 .payment h2 {
     margin: 0 0 8px 0;
-    font-size: 1.5rem; /* Updated font size */
+    font-size: 1.5rem;
 }
 
-/* Larger course showcase cards */
 .course {
     display: flex;
     gap: 16px;
     align-items: stretch;
     border-radius: 10px;
     padding: 14px;
-    background: linear-gradient(180deg, #ffffff, #f1f1f1); /* Updated gradient */
-    border: 1px solid #e0e0e0; /* Updated border color */
+    background: linear-gradient(180deg, #ffffff, #f1f1f1);
+    border: 1px solid #e0e0e0;
     transition: transform 0.2s ease;
 }
 
@@ -88,14 +86,14 @@ body {
 
 .course-title {
     margin: 0;
-    font-size: 1.2rem; /* Updated font size */
+    font-size: 1.2rem;
     font-weight: 700;
 }
 
 .course-desc {
     margin: 0;
     color: var(--muted);
-    font-size: 1rem; /* Updated font size */
+    font-size: 1rem;
     line-height: 1.25;
 }
 
@@ -120,7 +118,7 @@ body {
 .price {
     font-weight: 800;
     color: #111;
-    font-size: 1.1rem; /* Updated font size */
+    font-size: 1.1rem;
 }
 
 .remove-btn,
@@ -153,7 +151,6 @@ body {
     color: #555;
 }
 
-/* Payment form */
 .payment form {
     display: flex;
     flex-direction: column;
@@ -195,7 +192,6 @@ input[type="number"] {
     display: none;
 }
 
-/* Two-column inside left: chosen + bonus */
 .lists {
     display: flex;
     gap: 12px;
