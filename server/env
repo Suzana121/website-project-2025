@@ -1,6 +1,0 @@
-PORT=5000
-MONGO_URI=mongodb+srv://projectUser:Course123@cluster0.dtlfveb.mongodb.net/online_courses
-JWT_SECRET=3db65081866d0962da8ce1b2d00d3cb24764001a2e0e2731f1a9c7806dc869cba30a2e8b346886bce73809f01a746c5efc0fda1cd4fbbc05b5c5b836e7548576
-EMAIL_USER=100project2025@gmail.com
-EMAIL_PASSWORD=ycld cfgm myyv lret
-FRONTEND_URL=http://localhost:3000
