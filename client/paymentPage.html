@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תשלום</title>
+</head>
+<body>
+    <link rel="stylesheet" href="paymentPage.css">
+
+    <div class="checkout">
+        <!-- Left: two lists - Chosen (cart) and Bonus (other courses) -->
+        <div class="left">
+            <div class="lists">
+                <!-- Chosen courses (what the user actually picked) -->
+                <section id="chosenCard" class="card">
+                    <h2 class="courses-header">הקורסים שבחרתי</h2>
+
+                    <div id="chosen" style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
+                        <!-- Initially one chosen course -->
+                        <div class="course" data-price="599.00">
+                            <div class="thumb">React<br>פרויקט</div>
+                            <div class="course-info">
+                                <h3 class="course-title">בניית אפליקציות ב-React</h3>
+                                <p class="course-desc">קורס פרקטי עם פיתוח פרויקט מלא, ניהול מצב ונתיבים.</p>
+                                <div class="course-meta">
+                                    <span>משך: 14 מפגשים</span>
+                                    <span>מנחה: רונית בר</span>
+                                </div>
+                            </div>
+                            <div class="course-actions">
+                                <div class="price">599.00 ₪</div>
+                                <button class="remove-btn" type="button" title="הסר">הסר</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bonus / other available courses -->
+                <section id="bonusCard" class="card">
+                    <h2 class="courses-header">הקורסים שלנו</h2>
+
+                    <div id="bonus" style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
+                        <div class="course" data-price="349.00">
+                            <div class="thumb">HTML & CSS<br>מבוא מהיר</div>
+                            <div class="course-info">
+                                <h3 class="course-title">קורס מבוא ל-HTML & CSS</h3>
+                                <p class="course-desc">ללמוד לבנות ממשקי ווב רספונסיביים — מבוא מעשי עם דוגמאות וקבצים להורדה.</p>
+                                <div class="course-meta">
+                                    <span>משך: 8 מפגשים</span>
+                                    <span>מנחה: יעל כהן</span>
+                                </div>
+                            </div>
+                            <div class="course-actions">
+                                <div class="price">349.00 ₪</div>
+                                <button class="add-btn" type="button" title="הוסף">הוסף</button>
+                            </div>
+                        </div>
+
+                        <div class="course" data-price="499.00">
+                            <div class="thumb">JavaScript<br>פרקטי</div>
+                            <div class="course-info">
+                                <h3 class="course-title">קורס JavaScript מעמיק</h3>
+                                <p class="course-desc">הבנת הבסיס והשימוש המתקדם ב-JS: מבני נתונים, DOM ואסינכרוניות.</p>
+                                <div class="course-meta">
+                                    <span>משך: 12 מפגשים</span>
+                                    <span>מנחה: דן לוי</span>
+                                </div>
+                            </div>
+                            <div class="course-actions">
+                                <div class="price">499.00 ₪</div>
+                                <button class="add-btn" type="button" title="הוסף">הוסף</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Cart summary area (keeps totals) -->
+            <section class="card" style="margin-top:12px;">
+                <div class="summary">
+                    <div class="small">סה"כ קורסים:</div>
+                    <div id="itemsCount">1</div>
+                </div>
+                <div class="summary">
+                    <div class="small">סה"כ לתשלום:</div>
+                    <div id="total">599.00 ₪</div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Right: Payment -->
+        <aside class="right card payment">
+            <h2>פרטי תשלום</h2>
+            <form id="paymentForm" autocomplete="off">
+                <label class="small">שם על הכרטיס</label>
+                <input type="text" id="cardName" placeholder="שם מלא כפי שמופיע על הכרטיס" required>
+
+                <label class="small">מספר כרטיס</label>
+                <input type="tel" id="cardNumber" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" required>
+
+                <div style="display:flex; gap:8px;">
+                    <div style="flex:1">
+                        <label class="small">תוקף (MM/YY)</label>
+                        <input type="text" id="exp" placeholder="MM/YY" maxlength="5" required>
+                    </div>
+                    <div style="width:120px">
+                        <label class="small">CVC</label>
+                        <input type="tel" id="cvc" inputmode="numeric" maxlength="4" placeholder="123" required>
+                    </div>
+                </div>
+
+                <div class="small">סכום לחיוב: <strong id="payAmount">599.00 ₪</strong></div>
+
+                <button class="pay-btn" type="submit">שלם עכשיו</button>
+                <div class="notice" id="notice">התשלום בוצע בהצלחה (דמה).</div>
+            </form>
+        </aside>
+    </div>
+
+    <script src="paymentPage.js"></script>
+</body>
+</html>

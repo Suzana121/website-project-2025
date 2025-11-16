@@ -1,37 +1,82 @@
+
 <!DOCTYPE html>
 <html lang="he">
 <head>
-    <meta charset="UTF-8">
-    <title>פורטל קורסים - API</title>
-    <style>
-        body { font-family: Arial; padding: 20px; }
-        #youtubeTitle { font-weight: bold; }
-        #youtubeDescription { margin-bottom: 20px; }
-        #weather { margin-top: 20px; font-size: 18px; }
-        iframe { margin-top: 10px; width: 560px; height: 315px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>פורטל קורסים – בית</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <h1>ברוכים הבאים לפורטל הקורסים</h1>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a class="logo" href="index.html">פורטל קורסים</a>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="index.html">בית</a></li>
+          <li><a href="course-html-css.html">HTML & CSS</a></li>
+          <li><a href="course-javascript.html">JavaScript</a></li>
+          <li><a href="course-node-express.html">Node & Express</a></li>
+        </ul>
+      </nav>
+      <button class="header-cta" onclick="document.getElementById('courses').scrollIntoView({behavior:'smooth'})">לקורסים</button>
+    </div>
+  </header>
 
-    <!-- weather -->
-    <div id="weather">
-        <div id="weatherSection">
-            <h2 id="weatherCity"></h2>
-            <p id="weatherTemp"></p>
-            <p id="weatherDesc"></p>
-        </div>
+  <!-- Hero -->
+  <section class="hero_class">
+    <div class="right_container">
+      <h1 class="hero_h">ברוכה הבאה לפורטל הקורסים</h1>
+      <p class="hero_p">בחרי קורס בפיתוח אתרים והתחילי לצפות מיד.</p>
+      <button class="hero_b" onclick="document.getElementById('courses').scrollIntoView({behavior:'smooth'})">הצגת הקורסים</button>
+    </div>
+    <div class="left_container"></div>
+  </section>
+
+  <!-- שלושת הקורסים -->
+  <section id="courses" class="strengths_c">
+    <div class="strengths-headings">
+      <h2>הקורסים שלנו</h2>
+      <p class="strengths_p">שלושה מסלולים מלאים – לחצי לצפייה בפרטים</p>
     </div>
 
-    <!-- YouTube -->
-    <div id="youtubeSection">
-        <h3 id="youtubeTitle"></h3>
-        <p id="youtubeDescription"></p>
-        <!-- iframe by youtube.js -->
-    </div>
+    <div class="lottie-main">
+      <div class="lottie">
+        <h3 class="lotti-txt">HTML & CSS</h3>
+        <p class="lotti-txt">סימנטיקה, Grid/Flex, רספונסיביות.</p>
+        <button onclick="location.href='course-html-css.html'">כניסה לקורס</button>
+      </div>
 
-    <!--חיבור הקבצים -->
-    <script src="youtube.js"></script>
-    <script src="weather.js"></script>
+      <div class="lottie">
+        <h3 class="lotti-txt">JavaScript</h3>
+        <p class="lotti-txt">ES6+, DOM, אירועים ו־API.</p>
+        <button onclick="location.href='course-javascript.html'">כניסה לקורס</button>
+      </div>
+
+      <div class="lottie">
+        <h3 class="lotti-txt">Node & Express</h3>
+        <p class="lotti-txt">שרתים, REST ו־CRUD.</p>
+        <button onclick="location.href='course-node-express.html'">כניסה לקורס</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="why-us">
+    <p class="why-us-txt">כל קורס כולל סרטון פתיחה + שילוב API חיצוניים (YouTube + מזג אוויר).</p>
+  </section>
+
+   </header>
+
+  <!-- Weather: top-right -->
+  <!--<div id="weather" class="weather-text" dir="rtl">
+  <span id="weatherCity"></span>
+  <span id="weatherTemp"></span>
+  <span id="weatherDesc"></span>
+</div>
+
+<script src="weather.js" defer></script>-->
+
 </body>
 </html>
