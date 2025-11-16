@@ -414,18 +414,3 @@ h2 {
 }
 
 
-/* ===== Weather text clean style ===== */
-.weather-text {
-  position: absolute;
-  top: 80px;          /* קצת מתחת ל-header */
-  right: 20px;        /* צמוד לצד ימין */
-  color: white;       /* צבע טקסט */
-  font-family: "Heebo", sans-serif;
-  font-size: 17px;
-  text-align: right;
-  z-index: 50;        /* מעל שאר האלמנטים */
-}
-
-.weather-text span {
-  margin-left: 8px;   /* רווח קטן בין חלקי הטקסט */
-}

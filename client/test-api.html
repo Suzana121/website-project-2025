@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+<meta charset="UTF-8">
+<title>בדיקת API</title>
+</head>
+<body>
+<h1>בדיקת API</h1>
+<button id="test-login">בדיקת Login</button>
+<button id="test-register">בדיקת Register</button>
+
+<script>
+const testLoginButton = document.getElementById('test-login');
+const testRegisterButton = document.getElementById('test-register');
+
+// בדיקה Login
+testLoginButton.addEventListener('click', async () => {
+    try {
+        const response = await fetch('http://localhost:5000/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idNumber: '123456782', password: '123456' })
+        });
+        const data = await response.json();
+        console.log('Login Response:', data);
+        alert(JSON.stringify(data));
+    } catch (err) {
+        console.error('Error Login:', err);
+        alert('שגיאה ב-Login, בדקי את הקונסול');
+    }
+});
+
+// בדיקה Register
+testRegisterButton.addEventListener('click', async () => {
+    try {
+        const response = await fetch('http://localhost:5000/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                idNumber: '123456782', 
+                name: 'שירה טסט', 
+                email: 'shira@test.com', 
+                password: '123456' 
+            })
+        });
+        const data = await response.json();
+        console.log('Register Response:', data);
+        alert(JSON.stringify(data));
+    } catch (err) {
+        console.error('Error Register:', err);
+        alert('שגיאה ב-Register, בדקי את הקונסול');
+    }
+});
+</script>
+</body>
+</html>

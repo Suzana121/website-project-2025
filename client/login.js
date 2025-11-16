@@ -201,7 +201,7 @@ loginButton.addEventListener('click', async (e) => {
     loginButton.textContent = 'מעבד...';
     
     try {
-        const response = await fetch('http://localhost:5000/api/auth/login', {
+        const response = await fetch('http://localhost:8000/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idNumber, password })
@@ -272,7 +272,7 @@ registerButton.addEventListener('click', async (e) => {
     registerButton.textContent = 'מעבד...';
     
     try {
-        const response = await fetch('http://localhost:5000/api/auth/register', {
+        const response = await fetch('http://localhost:8000/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idNumber, name, email, password })
@@ -315,7 +315,7 @@ forgotSubmitButton.addEventListener('click', async (e) => {
     forgotSubmitButton.textContent = 'שולח...';
     
     try {
-        const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
+        const response = await fetch('http://localhost:8000/api/auth/forgot-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idNumber })
