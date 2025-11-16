@@ -56,15 +56,14 @@ button:hover {
   top: 70px;                 /* קצת קרוב יותר לראש הדף */
   align-items: center;
   justify-content: space-between;
-  width: min(1100px, calc(100% - 60px)); /* קצת צר יותר */
+  width: min(1400px, calc(100% - 60px)); /* קצת צר יותר */
   background-color: #fff;
-  padding: 6px 25px;         /* ⬅️ הקטנה משמעותית של הגובה */
-  border-radius: 25px;       /* ⬅️ עיגול עדין בלבד */
-  margin: 30px auto -80px;   /* ⬅️ פחות רווח חיצוני */
+  padding:20px;         /* ⬅️ הקטנה משמעותית של הגובה */
+  border-radius: 50px;       /* ⬅️ עיגול עדין בלבד */
+  margin:-50px  auto;   /* ⬅️ פחות רווח חיצוני */
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   z-index: 9999;
 }
-
 
 .header-container {
   display: flex;
@@ -320,8 +319,6 @@ h2 {
   .why-us-txt { width: 92%; font-size: 18px; }
 }
 
-
-
 /* ===== Cards / Lottie boxes (לשימוש בעמוד הראשי) ===== */
 .lottie-main {
   display: flex;
@@ -387,7 +384,7 @@ h2 {
   box-shadow: 0 0 15px rgba(169, 47, 251, 0.4);
 }
 
-
+/* YouTube section – גרסה מורחבת */
 #youtubeSection {
   text-align: center;
   color: #fff;
@@ -413,7 +410,6 @@ h2 {
   padding: 20px;
 }
 
-
 /* ===== Weather text clean style ===== */
 .weather-text {
   position: absolute;
@@ -428,4 +424,156 @@ h2 {
 
 .weather-text span {
   margin-left: 8px;   /* רווח קטן בין חלקי הטקסט */
+}
+
+/* ===== קורס: וידאו + פלייליסט ===== */
+
+.course-layout {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+/* קופסת הווידאו */
+.course-video {
+  background: #0b0a29;
+  border-radius: 20px;
+  padding: 18px 18px 24px;
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+}
+
+.video-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+
+.course-video iframe {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: 0;
+  border-radius: 12px;
+  background: #000;
+}
+.course-layout {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: flex-start;   /* ⬅️ חדש: לא למתוח לגובה מלא */
+}
+
+
+.video-desc {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.75;
+  white-space: pre-line;
+}
+
+/* סיידבר פלייליסט */
+.playlist {
+  background: #fff;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  max-height: 100%;
+}
+
+.playlist-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 12px;
+}
+
+.playlist-list {
+  display: grid;
+  gap: 10px;
+  max-height: calc(100vh - 280px);
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.playlist-item {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+  align-items: center;
+  background: #f7f7ff;
+  border-radius: 12px;
+  padding: 8px;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.playlist-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  background: #f3f1ff;
+}
+
+.playlist-item.active {
+  outline: 2px solid #6a5af9;
+  background: #efeaff;
+}
+
+.playlist-thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #000;
+}
+
+.playlist-meta {
+  display: grid;
+  gap: 4px;
+}
+
+.playlist-title-sm {
+  font-weight: 700;
+  color: #222;
+  font-size: 15px;
+}
+
+.playlist-channel,
+.playlist-pub {
+  font-size: 13px;
+  color: #666;
+}
+
+.playlist-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.playlist-btn {
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: 0;
+  background: #6a5af9;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.playlist-btn[hidden] {
+  display: none;
+}
+
+
+
+/* רספונסיבי לפלייליסט */
+@media (max-width: 900px) {
+  .course-layout {
+    grid-template-columns: 1fr;
+  }
+  .playlist {
+    order: -1;
+  }
 }
