@@ -14,11 +14,13 @@ const userSchema = new mongoose.Schema({
       message: 'תעודת זהות חייבת להכיל 9 ספרות'
     }
   },
+
   name: {
     type: String,
     required: true,
     trim: true
   },
+
   email: {
     type: String,
     required: true,
@@ -26,20 +28,32 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
+
   password: {
     type: String,
     required: true
   },
+
   role: {
     type: String,
     enum: ['student', 'instructor'],
     default: 'student'
   },
+
   // שדות לאיפוס סיסמה
-  resetPasswordToken: String,
-  resetPasswordExpires: Date
+  resetPasswordToken: {
+    type: String,
+    default: null
+  },
+
+  resetPasswordExpires: {
+    type: Date,
+    default: null
+  }
+
 }, {
   timestamps: true
 });
 
+// כדי להימנע משגיאה בנודמונ עם import כפול של המודל
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);

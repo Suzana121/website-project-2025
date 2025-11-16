@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Course = require('../models/Course');
-const User = require('../models/User');
+const Course = require('../models/course.js');
+const User = require('../models/user.js');
 const jwt = require('jsonwebtoken');
 
 // Middleware לאימות JWT

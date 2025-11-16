@@ -7,20 +7,7 @@
     <link rel="stylesheet" href="homePage.css">
 </head>
 <body>
-    <header class="site-header" dir="rtl">
-        <div class="header-container">
-            <a class="logo" href="#sec1">המסע למפתח המצליח</a>
-            <nav class="main-nav" aria-label="תפריט ראשי">
-                <ul>
-                    <li><a href="#sec2">יתרונות</a></li>
-                    <li><a href="#sec3">למה לבחור בנו</a></li>
-                    <li><a href="#sec4">הקורסים שלנו</a></li>
-                    <a href="profile.html">הפרופיל שלי</a>
-                </ul>
-            </nav>
-            <button class="header-cta" onclick="location.href='login.html'">התחברות</button>
-        </div>
-    </header>
+
     <div class="hero_class" id="sec1">
         <div class="right_container">
             <img src="assets/laptop.png" alt="">
@@ -36,7 +23,43 @@
 
         </div>        
     </div>
-    <div class="strengths_c" id="sec2">
+
+    <div class="courses-section" id="sec2">
+        <h2>הקורסים שלנו</h2>
+        <p class="courses-intro">
+            בחרו את הקורס שאתם רוצים ללמוד והתחילו את המסע שלכם כמפתחים מקצועיים.
+        </p>
+
+        <div class="courses-cards">
+            <!-- כרטיס 1 -->
+            <div class="course-card" data-id="1" data-price="349">
+                <img src="assets/html css.png" alt="HTML & CSS">
+                <h3>HTML & CSS</h3>
+                <p>למדו לבנות ממשקי ווב מודרניים ורספונסיביים עם HTML ו-CSS.</p>
+                <div class="course-price">₪349</div>
+                <button class="buy-btn">קנו עכשיו</button>
+            </div>
+
+            <!-- כרטיס 2 -->
+            <div class="course-card" data-id="2" data-price="499">
+                <img src="assets/js.png" alt="JavaScript">
+                <h3>JavaScript</h3>
+                <p>הבינו את היסודות והשימושים המתקדמים של JavaScript בעבודה עם DOM ואסינכרוניות.</p>
+                <div class="course-price">₪499</div>
+                <button class="buy-btn">קנו עכשיו</button>
+            </div>
+
+            <!-- כרטיס 3 -->
+            <div class="course-card" data-id="3" data-price="599">
+                <img src="assets/nodejs.png" alt="React">
+                <h3>React</h3>
+                <p>פיתוח אפליקציות מודרניות עם React – ניהול סטייט, נתיבים ופרויקטים מלאים.</p>
+                <div class="course-price">₪599</div>
+                <button class="buy-btn">קנו עכשיו</button>
+            </div>
+        </div>
+    </div>
+    <div class="strengths_c" id="sec3">
         <div class="strengths-headings">
             <h2>
                     שדרגו את קריירת המתכנתים שלכם
@@ -84,47 +107,11 @@
             </div>
         </div>
     </div>
-    <div class="why-us" id="sec3">
+    <div class="why-us" id="sec4">
         <h2>למה לך לקחת את הקורסים שלנו?</h2>
         <p class="why-us-txt">הקורסים שלנו תוכננו ונבנו בקפידה כדי להבטיח את המסלול היעיל והטוב ביותר עבורך. אנו משלבים הסברים מעמיקים ושיטות עבודה ייחודיות, שלא תמצאו בשום מקור לימוד אחר, ומבטיחים הצלחה והבנה מלאה.</p>
     </div>
 
-
-    <div class="courses-section" id="sec4">
-    <h2>הקורסים שלנו</h2>
-    <p class="courses-intro">
-        בחרו את הקורס שאתם רוצים ללמוד והתחילו את המסע שלכם כמפתחים מקצועיים.
-    </p>
-
-    <div class="courses-cards">
-        <!-- כרטיס 1 -->
-        <div class="course-card" data-id="1" data-price="349">
-            <img src="assets/html css.png" alt="HTML & CSS">
-            <h3>HTML & CSS</h3>
-            <p>למדו לבנות ממשקי ווב מודרניים ורספונסיביים עם HTML ו-CSS.</p>
-            <div class="course-price">₪349</div>
-            <button class="buy-btn">קנו עכשיו</button>
-        </div>
-
-        <!-- כרטיס 2 -->
-        <div class="course-card" data-id="2" data-price="499">
-            <img src="assets/js.png" alt="JavaScript">
-            <h3>JavaScript</h3>
-            <p>הבינו את היסודות והשימושים המתקדמים של JavaScript בעבודה עם DOM ואסינכרוניות.</p>
-            <div class="course-price">₪499</div>
-            <button class="buy-btn">קנו עכשיו</button>
-        </div>
-
-        <!-- כרטיס 3 -->
-        <div class="course-card" data-id="3" data-price="599">
-            <img src="assets/nodejs.png" alt="React">
-            <h3>React</h3>
-            <p>פיתוח אפליקציות מודרניות עם React – ניהול סטייט, נתיבים ופרויקטים מלאים.</p>
-            <div class="course-price">₪599</div>
-            <button class="buy-btn">קנו עכשיו</button>
-        </div>
-    </div>
-</div>
 
     
 
@@ -138,8 +125,9 @@
   <span id="weatherDesc"></span>
 </div>
 
-<!-- בסוף ה-body: -->
-<script src="api/weather.js" defer></script>
+
+<!-- <script src="api/weather.js" defer></script> -->
+<script src="loadHeader.js"></script>
 
 </body>
 </html>
