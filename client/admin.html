@@ -9,12 +9,25 @@
 </head>
 <body>
     <div class="container">
+
         <div class="header">
             <h1>ניהול משתמשים</h1>
             <button onclick="logout()" class="logout-btn">התנתק</button>
         </div>
 
         <div id="message" class="message hidden"></div>
+
+        <!-- תיבת מיון וכפתור החלפת כיוון -->
+        <div class="sort-container" style="margin-bottom:15px; text-align:right;">
+            <label for="sort-select">מיין לפי:</label>
+            <select id="sort-select" onchange="changeSortField()">
+                <option value="name">שם</option>
+                <option value="email">אימייל</option>
+                <option value="idNumber">תעודת זהות</option>
+                <option value="roleText">תפקיד</option>
+            </select>
+            <button class="sort-btn" onclick="toggleSortDirection()">החלף כיוון מיון ⬍</button>
+        </div>
 
         <div class="users-table">
             <table>
@@ -30,7 +43,7 @@
                 </thead>
                 <tbody id="users-list">
                     <tr>
-                        <td colspan="6" style="text-align: center; padding: 20px;">טוען נתונים...</td>
+                        <td colspan="6" style="text-align:center;padding:20px;">טוען נתונים...</td>
                     </tr>
                 </tbody>
             </table>
@@ -38,6 +51,5 @@
     </div>
 
     <script src="admin.js"></script>
-    <script src="/client/loadHeader.js"></script>
 </body>
 </html>
