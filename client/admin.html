@@ -17,16 +17,18 @@
 
         <div id="message" class="message hidden"></div>
 
-        <!-- תיבת מיון וכפתור החלפת כיוון -->
+        <!-- מיון בתוך כפתור -->
         <div class="sort-container" style="margin-bottom:15px; text-align:right;">
-            <label for="sort-select">מיין לפי:</label>
-            <select id="sort-select" onchange="changeSortField()">
-                <option value="name">שם</option>
-                <option value="email">אימייל</option>
-                <option value="idNumber">תעודת זהות</option>
-                <option value="roleText">תפקיד</option>
-            </select>
-            <button class="sort-btn" onclick="toggleSortDirection()">החלף כיוון מיון ⬍</button>
+            <button class="sort-dropdown-btn" id="sort-btn">
+                מיין לפי: שם ▼
+            </button>
+            <ul class="sort-dropdown-list hidden" id="sort-list">
+                <li data-field="name">שם</li>
+                <li data-field="email">אימייל</li>
+                <li data-field="idNumber">תעודת זהות</li>
+                <li data-field="roleText">תפקיד</li>
+            </ul>
+            <button class="sort-btn" onclick="toggleSortDirection()">⬍ החלף כיוון מיון</button>
         </div>
 
         <div class="users-table">
