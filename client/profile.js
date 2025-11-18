@@ -1,15 +1,23 @@
 // בדיקת משתמש מחובר
 function checkAuth() {
     const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('userData');
+    const userJson = localStorage.getItem('user'); // שינוי מ-userData ל-user
     
-    /*if (!token || !userData) {
+    if (!token || !userJson) {
         alert('עליך להתחבר כדי לגשת לעמוד זה');
         window.location.href = 'login.html';
         return null;
-    }*/
+    }
     
-    return JSON.parse(userData);
+    try {
+        return JSON.parse(userJson);
+    } catch (e) {
+        console.error('שגיאה בפענוח נתוני משתמש:', e);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+        return null;
+    }
 }
 
 // טעינת פרטי המשתמש
@@ -18,12 +26,18 @@ function loadUserInfo() {
     if (!user) return;
     
     // עדכון פרטי המשתמש בממשק
-    document.getElementById('userName').textContent = `שלום, ${user.name}`;
-    document.getElementById('userEmail').textContent = user.email;
-    document.getElementById('userRole').textContent = user.role === 'instructor' ? 'מרצה' : 'תלמיד';
+    document.getElementById('userName').textContent = `שלום, ${user.name || 'משתמש'}`;
+    document.getElementById('userEmail').textContent = user.email || 'לא זמין';
+    
+    // תרגום תפקיד לעברית
+    let roleText = 'תלמיד';
+    if (user.role === 'instructor') roleText = 'מרצה';
+    else if (user.role === 'admin') roleText = 'מנהל';
+    
+    document.getElementById('userRole').textContent = roleText;
     
     // אות ראשונה של השם לאווטאר
-    const initial = user.name.charAt(0).toUpperCase();
+    const initial = user.name ? user.name.charAt(0).toUpperCase() : '?';
     document.getElementById('userInitial').textContent = initial;
     
     // תאריך הצטרפות (אם קיים)
@@ -34,6 +48,8 @@ function loadUserInfo() {
             year: 'numeric' 
         });
         document.getElementById('memberSince').textContent = formattedDate;
+    } else {
+        document.getElementById('memberSince').textContent = 'חדש';
     }
 }
 
@@ -44,8 +60,15 @@ async function loadMyCourses() {
     const emptyState = document.getElementById('emptyState');
     const coursesList = document.getElementById('coursesList');
     
+    if (!token) {
+        loadingSpinner.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+    }
+    
     try {
-        const response = await fetch('http://localhost:5000/api/courses/my-courses', {
+        // שים לב! שיניתי את הפורט ל-8000 כמו ב-server.js שלך
+        const response = await fetch('http://localhost:8000/api/courses/my-courses', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -58,11 +81,11 @@ async function loadMyCourses() {
         // הסתרת ה-loading
         loadingSpinner.style.display = 'none';
         
-        if (!data.success) {
+        if (!response.ok || !data.success) {
             throw new Error(data.message || 'שגיאה בטעינת הקורסים');
         }
         
-        const courses = data.courses;
+        const courses = data.courses || [];
         
         // עדכון סטטיסטיקות
         document.getElementById('totalCourses').textContent = courses.length;
@@ -71,6 +94,7 @@ async function loadMyCourses() {
         // אם אין קורסים
         if (courses.length === 0) {
             emptyState.style.display = 'block';
+            coursesList.innerHTML = '';
             return;
         }
         
@@ -97,25 +121,29 @@ function displayCourses(courses) {
     coursesList.innerHTML = courses.map(course => {
         // אייקון לפי שם הקורס
         let courseIcon = '📚';
-        if (course.title.includes('HTML') || course.title.includes('CSS')) {
+        const title = course.title || '';
+        
+        if (title.includes('HTML') || title.includes('CSS')) {
             courseIcon = '🎨';
-        } else if (course.title.includes('JavaScript') || course.title.includes('JS')) {
+        } else if (title.includes('JavaScript') || title.includes('JS')) {
             courseIcon = '💻';
-        } else if (course.title.includes('Node') || course.title.includes('Backend')) {
+        } else if (title.includes('Node') || title.includes('Backend')) {
             courseIcon = '⚙️';
-        } else if (course.title.includes('React') || course.title.includes('Vue')) {
+        } else if (title.includes('React') || title.includes('Vue')) {
             courseIcon = '⚛️';
         }
         
         // תאריך רכישה
-        const purchaseDate = new Date(course.createdAt).toLocaleDateString('he-IL', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        });
+        const purchaseDate = course.createdAt 
+            ? new Date(course.createdAt).toLocaleDateString('he-IL', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+              })
+            : 'לא זמין';
         
         // שם המרצה
-        const instructorName = course.instructor ? course.instructor.name : 'לא ידוע';
+        const instructorName = course.instructor?.name || 'לא ידוע';
         
         return `
             <div class="course-card" onclick="goToCourse('${course._id}')">
@@ -123,7 +151,7 @@ function displayCourses(courses) {
                     ${courseIcon}
                 </div>
                 <div class="course-content">
-                    <h3>${course.title}</h3>
+                    <h3>${course.title || 'ללא כותרת'}</h3>
                     <p>${course.description || 'תיאור הקורס יעודכן בקרוב'}</p>
                     <div class="course-instructor">
                         👨‍🏫 ${instructorName}
@@ -146,9 +174,7 @@ function displayCourses(courses) {
 // מעבר לקורס ספציפי
 function goToCourse(courseId) {
     // כאן תצטרכי להחליף לכתובת הנכונה של עמוד הקורס
-    // לדוגמה: course.html?id=${courseId}
-    // או אם יש לך עמודי קורס ספציפיים כמו course-html-css.html
-    
+    console.log('מעבר לקורס:', courseId);
     alert(`מעבר לקורס ${courseId}\n\nכאן תצטרכי לשנות את הכתובת לעמוד הקורס הנכון`);
     // window.location.href = `course.html?id=${courseId}`;
 }
@@ -157,7 +183,7 @@ function goToCourse(courseId) {
 function logout() {
     if (confirm('האם אתה בטוח שברצונך להתנתק?')) {
         localStorage.removeItem('token');
-        localStorage.removeItem('userData');
+        localStorage.removeItem('user');
         alert('התנתקת בהצלחה!');
         window.location.href = 'login.html';
     }

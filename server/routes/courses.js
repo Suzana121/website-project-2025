@@ -25,7 +25,7 @@ const authenticateToken = (req, res, next) => {
 // GET /api/courses/my-courses - מחזיר את כל הקורסים של המשתמש המחובר
 router.get('/my-courses', authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.id;
+const userId = req.user.userId;
 
     // מוצא את כל הקורסים שהמשתמש רשום בהם
     const courses = await Course.find({ students: userId })
