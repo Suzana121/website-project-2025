@@ -174,7 +174,7 @@ router.post('/forgot-password', forgotPasswordLimiter, async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // שעה
     await user.save();
 
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&id=${idNumber}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/resetPassword.html?token=${resetToken}&id=${idNumber}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,

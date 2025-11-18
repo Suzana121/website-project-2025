@@ -142,7 +142,7 @@ backToLoginButton.addEventListener('click', () => {
 // ולידציה בזמן אמת עבור שדות תעודת זהות (ריפקטור חלקי)
 function setupIdValidation(idInput, countSpan, validSpan) {
     idInput.addEventListener('input', (e) => {
-        // מונע הקלדת תווים שאינם ספרות - מצוין!
+        // מונע הקלדת תווים שאינם ספרות - !
         e.target.value = e.target.value.replace(/\D/g, '');
         countSpan.textContent = e.target.value.length;
         
