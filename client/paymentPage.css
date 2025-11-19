@@ -1,225 +1,341 @@
+/*
+====================================
+  איפוס ומשתנים גלובליים
+  (שילוב סגנון ה-Login)
+====================================
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 :root {
-    --card-bg: #f8f9fa;
-    --muted: #6c757d;
-    --accent: #28a745;
-    --max-width: 1200px;
+    /* צבעי רקע וטקסט מה-Login */
+    --main-bg: #131060; /* כחול כהה ראשי */
+    --form-bg: #ffffff; /* רקע לכרטיס לבן */
+    --text-main: #333;
+    --text-muted: #666;
+    
+    /* גרדיאנט ראשי לכפתורים ודגשים */
+    --main-gradient: linear-gradient(to left, #E39A65 0%, #A92FFB 35%, #6507FA 60%, #4B12D5 80%, #3919BB 100%);
+
+    --max-width: 1300px;
 }
 
 body {
     font-family: 'Heebo', sans-serif;
     direction: rtl;
-    margin: 0;
+    /* רקע כמו ב-Login */
+    background: radial-gradient(circle farthest-corner at center center, #131060 0%, #100D58 50%, #06033E 100%);
+    min-height: 100vh;
+    padding: 20px;
 }
 
+/*
+====================================
+  פריסה כללית
+====================================
+*/
 .checkout {
     display: flex;
-    gap: 24px;
+    gap: 30px; /* הגדלה קלה של הרווח */
     max-width: var(--max-width);
     margin: 32px auto;
     align-items: flex-start;
-    padding: 0 16px;
+    padding: 0 20px;
 }
 
 .left {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 20px;
 }
 
 .right {
-    width: 380px;
-    min-width: 260px;
+    width: 420px; /* הגדלה קלה של רוחב טופס התשלום */
+    min-width: 300px;
 }
 
 .card {
-    background: var(--card-bg);
-    border: 1px solid #e6e6e6;
-    border-radius: 12px;
-    padding: 18px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    background: var(--form-bg);
+    border: none; /* הסרת הגבול */
+    border-radius: 25px; /* פינות עגולות כמו ב-Login */
+    padding: 30px; /* הגדלת ריפוד */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); /* צל גדול ודרמטי */
 }
 
+/*
+====================================
+  כותרות
+====================================
+*/
 .courses-header,
 .payment h2 {
-    margin: 0 0 8px 0;
-    font-size: 1.5rem;
+    color: var(--text-main);
+    font-size: 2rem; /* גודל כותרת גדול יותר */
+    font-weight: 700;
+    margin: 0 0 15px 0;
 }
 
+/*
+====================================
+  כרטיסי קורסים (Courses)
+====================================
+*/
 .course {
     display: flex;
-    gap: 16px;
+    gap: 18px;
     align-items: stretch;
-    border-radius: 10px;
-    padding: 14px;
-    background: linear-gradient(180deg, #ffffff, #f1f1f1);
-    border: 1px solid #e0e0e0;
-    transition: transform 0.2s ease;
+    border-radius: 15px; /* פינות פחות דרמטיות מכרטיס ראשי */
+    padding: 16px;
+    background: #fcfcfc; /* רקע בהיר מאוד */
+    border: 1px solid #eee;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .course:hover {
-    transform: scale(1.05);
+    transform: scale(1.02); /* שינוי קטן יותר */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .thumb {
-    width: 160px;
-    min-width: 160px;
-    height: 110px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #e9eefc, #f7faff);
+    width: 140px;
+    min-width: 140px;
+    height: 100px;
+    border-radius: 12px;
+    /* רקע בהשראת ה-Login */
+    background: #e9eefc;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #2a3b8a;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 1rem;
     text-align: center;
     padding: 8px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05); /* צל פנימי קל */
 }
 
 .course-info {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .course-title {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 700;
+    color: #333;
 }
 
 .course-desc {
     margin: 0;
-    color: var(--muted);
-    font-size: 1rem;
-    line-height: 1.25;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.3;
 }
 
 .course-meta {
     display: flex;
-    gap: 12px;
-    color: #444;
+    gap: 15px;
+    color: #888;
     font-size: 0.9rem;
     align-items: center;
     flex-wrap: wrap;
+    margin-top: 5px;
 }
 
 .course-actions {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    align-items: flex-start;
-    min-width: 140px;
-    text-align: left;
+    gap: 10px;
+    align-items: flex-end; /* יישור לימין */
+    justify-content: space-between;
+    min-width: 120px;
+    text-align: right;
 }
 
 .price {
     font-weight: 800;
     color: #111;
-    font-size: 1.1rem;
+    font-size: 1.3rem; /* מחיר מודגש יותר */
 }
 
 .remove-btn,
 .add-btn {
-    background: transparent;
-    border: none;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
     cursor: pointer;
     font-weight: 600;
-    padding: 6px 8px;
-    border-radius: 6px;
+    padding: 8px 15px;
+    border-radius: 15px; /* פינות עגולות כמו בכפתורי ה-Login */
+    font-family: 'Heebo', sans-serif;
+    transition: all 0.3s;
 }
 
 .remove-btn {
-    color: #c33;
+    color: #dc3545;
 }
 
 .add-btn {
-    color: var(--accent);
+    color: #28a745;
 }
 
+.remove-btn:hover {
+    background-color: #f8d7da;
+}
+.add-btn:hover {
+    background-color: #d4edda;
+}
+
+/*
+====================================
+  סיכום עגלה (Summary)
+====================================
+*/
 .summary {
-    margin-top: 12px;
     display: flex;
     justify-content: space-between;
     font-weight: 600;
+    margin-top: 15px;
+}
+
+.summary:last-of-type {
+    font-size: 1.2rem;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
 }
 
 .small {
-    font-size: 0.9rem;
-    color: #555;
+    font-size: 1rem;
+    color: var(--text-muted);
 }
 
+
+/*
+====================================
+  טופס תשלום (Payment Form)
+====================================
+*/
 .payment form {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 15px; /* הגדלת הרווחים בין שדות */
+}
+
+.payment label {
+    display: block;
+    color: var(--text-main);
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 18px; /* גודל כמו ב-Login */
+    text-align: right;
 }
 
 input[type="text"],
-input[type="tel"],
-input[type="number"] {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+input[type="tel"] {
     width: 100%;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border: 2px solid #ddd;
+    color: #333;
+    border-radius: 15px; /* פינות עגולות כמו ב-Login */
+    font-size: 16px;
+    outline: none;
+    font-family: 'Heebo', sans-serif;
+    transition: border-color 0.3s;
 }
 
+input:focus {
+    border-color: #6507FA;
+}
+
+/* כפתור תשלום ראשי - משתמש בגרדיאנט של ה-Login */
 .pay-btn {
-    margin-top: 10px;
-    padding: 10px 30px;
+    margin-top: 20px;
+    width: 100%;
+    padding: 15px 30px;
     border-radius: 25px;
     border: 0;
     color: #fff;
     font-weight: 700;
     font-size: 20px;
-    background: linear-gradient(to left, #E39A65 0%, #A92FFB 35%, #6507FA 60%, #4B12D5 80%, #3919BB 100%);
+    background: var(--main-gradient);
     cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.pay-btn:hover {
+    opacity: 0.9;
 }
 
 .pay-btn:disabled {
-    background: #9ec1ff;
+    opacity: 0.5;
     cursor: not-allowed;
+    background: #ccc; /* רקע אחיד לאפור ללא גרדיאנט */
 }
 
 .notice {
-    margin-top: 12px;
-    padding: 10px;
-    border-radius: 8px;
-    background: #f0f9f7;
-    color: #065f46;
-    display: none;
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 15px;
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    text-align: center;
+    font-weight: 600;
 }
 
-.lists {
-    display: flex;
-    gap: 12px;
-    flex-direction: column;
-}
-
-.lists > .card {
-    flex: 1;
-    padding: 14px;
-}
-
-@media (max-width: 880px) {
+/*
+====================================
+  רספונסיביות
+====================================
+*/
+@media (max-width: 992px) { /* שינוי נקודת השבירה להתאמה טובה יותר */
     .checkout {
         flex-direction: column;
-        padding: 18px;
-    }
-
-    .thumb {
-        width: 120px;
-        min-width: 120px;
-        height: 90px;
+        padding: 20px;
+        gap: 25px;
     }
 
     .right {
         width: 100%;
+        order: -1; /* להזיז את טופס התשלום לראש הדף בנייד */
     }
 
-    .lists {
-        flex-direction: column;
+    .thumb {
+        width: 100px;
+        min-width: 100px;
+        height: 70px;
+    }
+}
+
+@media (max-width: 600px) {
+    .card {
+        padding: 20px;
+        border-radius: 20px;
+    }
+    
+    .course {
+        flex-direction: column; /* הצגת כרטיסי קורסים אחד מתחת לשני */
+        align-items: center;
+        text-align: center;
+    }
+    
+    .course-actions {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .thumb {
+        width: 100%;
+        height: auto;
     }
 }

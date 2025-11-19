@@ -33,7 +33,6 @@ const adminRoutes = require('./routes/admin');
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', coursesRoutes);
 app.use('/api/admin', adminRoutes);
-
 // Route בסיסי לבדיקה
 app.get('/api', (req, res) => {
   res.send('Server is running!');

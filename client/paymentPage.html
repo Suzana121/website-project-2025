@@ -1,54 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>תשלום</title>
+    <link rel="stylesheet" href="paymentPage.css">
 </head>
 <body>
-    <link rel="stylesheet" href="paymentPage.css">
-
     <div class="checkout">
-        <!-- Left: two lists - Chosen (cart) and Bonus (other courses) -->
         <div class="left">
             <div class="lists">
-                <!-- Chosen courses (what the user actually picked) -->
                 <section id="chosenCard" class="card">
                     <h2 class="courses-header">הקורסים שבחרתי</h2>
 
                     <div id="chosen" style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
-                        <!-- Initially one chosen course -->
-                        <div class="course" data-price="599.00">
-                            <div class="thumb">React<br>פרויקט</div>
-                            <div class="course-info">
-                                <h3 class="course-title">בניית אפליקציות ב-React</h3>
-                                <p class="course-desc">קורס פרקטי עם פיתוח פרויקט מלא, ניהול מצב ונתיבים.</p>
-                                <div class="course-meta">
-                                    <span>משך: 14 מפגשים</span>
-                                    <span>מנחה: רונית בר</span>
-                                </div>
-                            </div>
-                            <div class="course-actions">
-                                <div class="price">599.00 ₪</div>
-                                <button class="remove-btn" type="button" title="הסר">הסר</button>
-                            </div>
                         </div>
-                    </div>
                 </section>
 
-                <!-- Bonus / other available courses -->
                 <section id="bonusCard" class="card">
                     <h2 class="courses-header">הקורסים שלנו</h2>
 
                     <div id="bonus" style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
-                        <div class="course" data-price="349.00">
+                        <div class="course" data-price="349.00" data-id="691d946994f1d66a54e87501">
                             <div class="thumb">HTML & CSS<br>מבוא מהיר</div>
                             <div class="course-info">
                                 <h3 class="course-title">קורס מבוא ל-HTML & CSS</h3>
-                                <p class="course-desc">ללמוד לבנות ממשקי ווב רספונסיביים — מבוא מעשי עם דוגמאות וקבצים להורדה.</p>
+                                <p class="course-desc">ללמוד לבנות ממשקי ווב רספונסיביים — מבוא מעשי עם דוגמאות .</p>
                                 <div class="course-meta">
-                                    <span>משך: 8 מפגשים</span>
-                                    <span>מנחה: יעל כהן</span>
                                 </div>
                             </div>
                             <div class="course-actions">
@@ -57,14 +35,12 @@
                             </div>
                         </div>
 
-                        <div class="course" data-price="499.00">
+                        <div class="course" data-price="499.00" data-id="691d946994f1d66a54e87502">
                             <div class="thumb">JavaScript<br>פרקטי</div>
                             <div class="course-info">
                                 <h3 class="course-title">קורס JavaScript מעמיק</h3>
                                 <p class="course-desc">הבנת הבסיס והשימוש המתקדם ב-JS: מבני נתונים, DOM ואסינכרוניות.</p>
                                 <div class="course-meta">
-                                    <span>משך: 12 מפגשים</span>
-                                    <span>מנחה: דן לוי</span>
                                 </div>
                             </div>
                             <div class="course-actions">
@@ -72,24 +48,35 @@
                                 <button class="add-btn" type="button" title="הוסף">הוסף</button>
                             </div>
                         </div>
+                        
+                        <div class="course" data-price="599.00" data-id="691d946994f1d66a54e87503">
+                            <div class="thumb">React<br>פרויקט</div>
+                            <div class="course-info">
+                                <h3 class="course-title">בניית אפליקציות ב-React</h3>
+                                <p class="course-desc">קורס פרקטי עם פיתוח פרויקט מלא, ניהול מצב ונתיבים.</p>
+                                <div class="course-meta">
+                                </div>
+                            </div>
+                            <div class="course-actions">
+                                <div class="price">599.00 ₪</div>
+                                <button class="add-btn" type="button" title="הוסף">הוסף</button>
+                            </div>
+                        </div>
+
                     </div>
                 </section>
             </div>
 
-            <!-- Cart summary area (keeps totals) -->
             <section class="card" style="margin-top:12px;">
                 <div class="summary">
                     <div class="small">סה"כ קורסים:</div>
-                    <div id="itemsCount">1</div>
-                </div>
+                    <div id="itemsCount">0</div> </div>
                 <div class="summary">
                     <div class="small">סה"כ לתשלום:</div>
-                    <div id="total">599.00 ₪</div>
-                </div>
+                    <div id="total">0.00 ₪</div> </div>
             </section>
         </div>
 
-        <!-- Right: Payment -->
         <aside class="right card payment">
             <h2>פרטי תשלום</h2>
             <form id="paymentForm" autocomplete="off">
@@ -110,16 +97,13 @@
                     </div>
                 </div>
 
-                <div class="small">סכום לחיוב: <strong id="payAmount">599.00 ₪</strong></div>
-
-                <button class="pay-btn" type="submit">שלם עכשיו</button>
-                <div class="notice" id="notice">התשלום בוצע בהצלחה (דמה).</div>
+                <div class="small">סכום לחיוב: <strong id="payAmount">0.00 ₪</strong></div> <button class="pay-btn" type="submit">שלם עכשיו</button>
+                <div class="notice" id="notice" style="display:none;">התשלום בוצע בהצלחה!</div>
             </form>
         </aside>
     </div>
 
     <script src="paymentPage.js"></script>
     <script src="loadHeader.js"></script>
-
 </body>
 </html>

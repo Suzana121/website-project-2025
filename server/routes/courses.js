@@ -45,7 +45,69 @@ const userId = req.user.userId;
     });
   }
 });
+// הוסיפי את זה ב-courses.js:
 
+// POST /api/courses/purchase - רכישת קורסים
+router.post('/purchase', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { courseIds } = req.body;
+
+    console.log('📦 בקשת רכישה:', { userId, courseIds });
+
+    if (!courseIds || !Array.isArray(courseIds) || courseIds.length === 0) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'לא נשלחו קורסים לרכישה' 
+      });
+    }
+
+    // מוצא את כל הקורסים
+    const courses = await Course.find({ _id: { $in: courseIds } });
+
+    if (courses.length === 0) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'הקורסים לא נמצאו' 
+      });
+    }
+
+    console.log('📚 קורסים שנמצאו:', courses.length);
+
+    // מוסיף את המשתמש לכל קורס (אם הוא עדיין לא רשום)
+    const updatePromises = courses.map(course => {
+      if (!course.students.includes(userId)) {
+        course.students.push(userId);
+        console.log('➕ מוסיף משתמש לקורס:', course.title);
+        return course.save();
+      }
+      console.log('✅ משתמש כבר רשום לקורס:', course.title);
+      return Promise.resolve(course);
+    });
+
+    await Promise.all(updatePromises);
+
+    // מחזיר את הקורסים שנרכשו
+    const purchasedCourses = await Course.find({ _id: { $in: courseIds } })
+      .populate('instructor', 'name email');
+
+    console.log('✅ רכישה הושלמה בהצלחה!');
+
+    res.json({
+      success: true,
+      message: 'הקורסים נרכשו בהצלחה!',
+      courses: purchasedCourses,
+      count: purchasedCourses.length
+    });
+
+  } catch (error) {
+    console.error('❌ שגיאה ברכישת קורסים:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'שגיאה ברכישת הקורסים: ' + error.message 
+    });
+  }
+});
 // GET /api/courses/:id - מחזיר קורס בודד
 router.get('/:id', authenticateToken, async (req, res) => {
   try {
@@ -60,7 +122,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
     }
 
     // בדיקה אם המשתמש רשום לקורס
-    const isEnrolled = course.students.includes(req.user.id);
+    const isEnrolled = course.students.includes(req.user.userId);
 
     res.json({
       success: true,

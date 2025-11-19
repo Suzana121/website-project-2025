@@ -1,20 +1,26 @@
 // בדיקת משתמש מחובר
 function checkAuth() {
-    const token = localStorage.getItem('token');
-    const userJson = localStorage.getItem('user'); // שינוי מ-userData ל-user
+    const userJson = localStorage.getItem('user');
     
-    if (!token || !userJson) {
+    if (!userJson) {
         alert('עליך להתחבר כדי לגשת לעמוד זה');
         window.location.href = 'login.html';
         return null;
     }
     
     try {
-        return JSON.parse(userJson);
+        const user = JSON.parse(userJson);
+        
+        // בדיקה שיש טוקן
+        if (!user.token) {
+            throw new Error('חסר טוקן אימות');
+        }
+        
+        return user;
     } catch (e) {
         console.error('שגיאה בפענוח נתוני משתמש:', e);
         localStorage.removeItem('user');
-        localStorage.removeItem('token');
+        alert('נתוני ההתחברות לא תקינים, אנא התחבר שוב');
         window.location.href = 'login.html';
         return null;
     }
@@ -55,19 +61,15 @@ function loadUserInfo() {
 
 // טעינת הקורסים של המשתמש
 async function loadMyCourses() {
-    const token = localStorage.getItem('token');
+    const user = checkAuth();
+    if (!user) return;
+    
+    const token = user.token; // קבלת הטוקן מהאובייקט
     const loadingSpinner = document.getElementById('loadingSpinner');
     const emptyState = document.getElementById('emptyState');
     const coursesList = document.getElementById('coursesList');
     
-    if (!token) {
-        loadingSpinner.style.display = 'none';
-        emptyState.style.display = 'block';
-        return;
-    }
-    
     try {
-        // שים לב! שיניתי את הפורט ל-8000 כמו ב-server.js שלך
         const response = await fetch('http://localhost:8000/api/courses/my-courses', {
             method: 'GET',
             headers: {
@@ -81,7 +83,14 @@ async function loadMyCourses() {
         // הסתרת ה-loading
         loadingSpinner.style.display = 'none';
         
-        if (!response.ok || !data.success) {
+        if (!response.ok) {
+            // אם יש שגיאת אימות - נתק את המשתמש
+            if (response.status === 401 || response.status === 403) {
+                alert('פג תוקף ההתחברות, אנא התחבר שוב');
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+                return;
+            }
             throw new Error(data.message || 'שגיאה בטעינת הקורסים');
         }
         
@@ -99,13 +108,14 @@ async function loadMyCourses() {
         }
         
         // הצגת הקורסים
+        emptyState.style.display = 'none';
         displayCourses(courses);
         
     } catch (error) {
         console.error('שגיאה:', error);
         loadingSpinner.style.display = 'none';
         coursesList.innerHTML = `
-            <div style="text-align: center; padding: 40px; color: #e53e3e;">
+            <div style="text-align: center; padding: 40px; color: #e53e3e; grid-column: 1/-1;">
                 <p style="font-size: 18px; margin-bottom: 10px;">⚠️ אופס! משהו השתבש</p>
                 <p>${error.message}</p>
                 <button onclick="loadMyCourses()" style="margin-top: 20px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer;">נסה שוב</button>
@@ -129,13 +139,17 @@ function displayCourses(courses) {
             courseIcon = '💻';
         } else if (title.includes('Node') || title.includes('Backend')) {
             courseIcon = '⚙️';
-        } else if (title.includes('React') || title.includes('Vue')) {
+        } else if (title.includes('React') || title.includes('Vue') || title.includes('Angular')) {
             courseIcon = '⚛️';
+        } else if (title.includes('Python')) {
+            courseIcon = '🐍';
+        } else if (title.includes('Database') || title.includes('SQL')) {
+            courseIcon = '🗄️';
         }
         
-        // תאריך רכישה
-        const purchaseDate = course.createdAt 
-            ? new Date(course.createdAt).toLocaleDateString('he-IL', {
+        // תאריך רכישה - לוקח את updatedAt (כשהתלמיד נוסף) או createdAt
+        const purchaseDate = course.updatedAt || course.createdAt
+            ? new Date(course.updatedAt || course.createdAt).toLocaleDateString('he-IL', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric'
@@ -145,6 +159,9 @@ function displayCourses(courses) {
         // שם המרצה
         const instructorName = course.instructor?.name || 'לא ידוע';
         
+        // מספר תלמידים
+        const studentsCount = course.students?.length || 0;
+        
         return `
             <div class="course-card" onclick="goToCourse('${course._id}')">
                 <div class="course-image">
@@ -153,8 +170,13 @@ function displayCourses(courses) {
                 <div class="course-content">
                     <h3>${course.title || 'ללא כותרת'}</h3>
                     <p>${course.description || 'תיאור הקורס יעודכן בקרוב'}</p>
-                    <div class="course-instructor">
-                        👨‍🏫 ${instructorName}
+                    <div class="course-meta">
+                        <div class="course-instructor">
+                            👨‍🏫 ${instructorName}
+                        </div>
+                        <div class="course-students">
+                            👥 ${studentsCount} משתתפים
+                        </div>
                     </div>
                     <div class="course-date">
                         📅 נרכש ב: ${purchaseDate}
@@ -173,16 +195,17 @@ function displayCourses(courses) {
 
 // מעבר לקורס ספציפי
 function goToCourse(courseId) {
-    // כאן תצטרכי להחליף לכתובת הנכונה של עמוד הקורס
+    // כשתהיה מוכנה תשני את זה לעמוד הקורס האמיתי
     console.log('מעבר לקורס:', courseId);
-    alert(`מעבר לקורס ${courseId}\n\nכאן תצטרכי לשנות את הכתובת לעמוד הקורס הנכון`);
-    // window.location.href = `course.html?id=${courseId}`;
+    alert(`פותחים את הקורס...\n\nID: ${courseId}\n\n(כשתהיה לך דף קורס, תשני את הקוד פה)`);
+    
+    // דוגמה למה שצריך להיות:
+    // window.location.href = `course-learning.html?id=${courseId}`;
 }
 
 // התנתקות
 function logout() {
     if (confirm('האם אתה בטוח שברצונך להתנתק?')) {
-        localStorage.removeItem('token');
         localStorage.removeItem('user');
         alert('התנתקת בהצלחה!');
         window.location.href = 'login.html';

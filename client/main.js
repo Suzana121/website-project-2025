@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // ----------------------
 async function testServer() {
     try {
-        const response = await fetch("http://localhost:3000/api/test");
+        const response = await fetch("http://localhost:8000/api/test");
         const data = await response.json();
         console.log("תגובה מהשרת:", data);
     } catch (error) {
@@ -18,7 +18,6 @@ async function testServer() {
     }
 }
 
-// קריאה לבדיקה
 testServer();
 
 // ----------------------
@@ -32,7 +31,7 @@ if (loginForm) {
         const password = document.getElementById("password").value;
 
         try {
-            const response = await fetch("http://localhost:3000/api/login", {
+            const response = await fetch("http://localhost:8000/api/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password })
@@ -42,14 +41,24 @@ if (loginForm) {
             console.log("תגובה מהשרת:", data);
 
             if (response.ok) {
+                // שמירת פרטי המשתמש והטוקן ב-localStorage
+                const userData = {
+                    userId: data.userId,
+                    name: data.name,
+                    email: data.email,
+                    role: data.role,
+                    token: data.token  // שמירת הטוקן!
+                };
+                localStorage.setItem('user', JSON.stringify(userData));
+                
                 alert("התחברת בהצלחה!");
-                // ניתן להוסיף כאן הפניה לדף הקורסים
-                // window.location.href = "courses.html";
+                window.location.href = "courses.html";
             } else {
                 alert("שגיאה בהתחברות: " + data.message);
             }
         } catch (error) {
             console.error("שגיאה:", error);
+            alert("שגיאה בהתחברות");
         }
     });
 }
@@ -66,7 +75,7 @@ if (signupForm) {
         const password = document.getElementById("signupPassword").value;
 
         try {
-            const response = await fetch("http://localhost:3000/api/signup", {
+            const response = await fetch("http://localhost:8000/api/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email, password })
@@ -77,16 +86,20 @@ if (signupForm) {
 
             if (response.ok) {
                 alert("נרשמת בהצלחה!");
-                // ניתן להפנות לדף ההתחברות
-                // window.location.href = "homepage.html";
+                window.location.href = "login.html";
             } else {
                 alert("שגיאה בהרשמה: " + data.message);
             }
         } catch (error) {
             console.error("שגיאה:", error);
+            alert("שגיאה בהרשמה");
         }
     });
 }
+
+// ----------------------
+// ניהול כפתורי קנייה
+// ----------------------
 document.addEventListener('DOMContentLoaded', () => {
     const userJson = localStorage.getItem('user');
     const isLoggedIn = !!userJson;
@@ -97,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!cardsContainer) return;
 
     if (isLoggedIn) {
-        // מצב: משתמש מחובר → משאירים כפתורים ומחברים אותם לעמוד התשלום
         courseCards.forEach(card => {
             const btn = card.querySelector('.buy-btn');
             if (btn) {
@@ -107,15 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
-
     } else {
-        // מצב: אורח → מסתירים את כל כפתורי "קנו עכשיו"
         courseCards.forEach(card => {
             const btn = card.querySelector('.buy-btn');
             if (btn) btn.style.display = 'none';
         });
 
-        // יוצרים כפתור התחברות אחד מתחת לכל הקורסים
         const loginBtn = document.createElement('button');
         loginBtn.textContent = 'לקנייה התחברו';
         loginBtn.classList.add('login-buy-btn');
@@ -135,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'login.html';
         });
 
-        // מוסיפים מתחת לרשימת הקורסים
         cardsContainer.insertAdjacentElement('afterend', loginBtn);
     }
 });
@@ -145,8 +153,15 @@ document.addEventListener('DOMContentLoaded', () => {
 // ----------------------
 async function loadCourses() {
     try {
-        const response = await fetch("http://localhost:3000/api/courses");
-        const courses = await response.json();
+        const response = await fetch("http://localhost:8000/api/courses");
+        const data = await response.json();
+        
+        if (!data.success) {
+            console.error("שגיאה בטעינת קורסים");
+            return;
+        }
+
+        const courses = data.courses;
         const coursesList = document.getElementById("coursesList");
         if (!coursesList) return;
 
@@ -154,7 +169,7 @@ async function loadCourses() {
         courses.forEach(course => {
             const courseDiv = document.createElement("div");
             courseDiv.classList.add("course_item");
-            courseDiv.textContent = `${course.name} - ${course.description}`;
+            courseDiv.textContent = `${course.title} - ${course.description}`;
             coursesList.appendChild(courseDiv);
         });
     } catch (error) {
@@ -162,5 +177,4 @@ async function loadCourses() {
     }
 }
 
-// קריאה לטעינת הקורסים
 document.addEventListener("DOMContentLoaded", loadCourses);

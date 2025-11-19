@@ -94,7 +94,7 @@ function switchForm(activeFormId, title, activeTabElement = null, focusElement =
     // 1. הסתרת כל הטפסים ואיפוס שדות
     allForms.forEach(form => {
         form.classList.remove('active');
-        resetFormFields(form); // **שיפור: איפוס טפסים**
+        resetFormFields(form); 
     });
 
     // 2. הפעלת הטופס הנכון
@@ -114,7 +114,7 @@ function switchForm(activeFormId, title, activeTabElement = null, focusElement =
         }
     });
 
-    // 5. **שיפור: מיקוד אוטומטי**
+    // 5. מיקוד אוטומטי
     if (focusElement) {
         focusElement.focus();
     }
@@ -134,7 +134,6 @@ forgotPasswordButton.addEventListener('click', () => {
 });
 
 backToLoginButton.addEventListener('click', () => {
-    // מנקים את השדה של שכחתי סיסמה בתוך הפונקציה switchForm
     switchForm('login-form', 'התחברות למערכת', loginTab, loginId);
 });
 
@@ -171,16 +170,16 @@ forgotId.addEventListener('input', (e) => {
     forgotIdCount.textContent = e.target.value.length;
 });
 
-// **שיפור: ניקיון קלט לשם (מונע ספרות ותווים מיוחדים)**
+// ניקיון קלט לשם
 registerName.addEventListener('input', (e) => {
-    // מאפשר רק אותיות, רווחים וגרש/מקף (לשמות משולבים)
     e.target.value = e.target.value.replace(/[^א-תa-zA-Z\s'-]/g, '');
 });
 
-
-// התחברות
+// ----------------------------------------------------
+// 🎯 קטע 1: התחברות - **תיקון שמירת הטוקן**
+// ----------------------------------------------------
 loginButton.addEventListener('click', async (e) => {
-    e.preventDefault(); // מונע שליחת טופס רגילה
+    e.preventDefault(); 
     
     const idNumber = loginId.value.trim();
     const password = loginPassword.value;
@@ -211,9 +210,19 @@ loginButton.addEventListener('click', async (e) => {
         
         if (response.ok) {
             showMessage(data.message, 'success');
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
             
+            // ------------------------------------
+            // ✅ שינוי קריטי: שומרים את הטוקן בתוך אובייקט ה-user
+            // ------------------------------------
+            const userObject = data.user || {}; // אובייקט המשתמש
+            const authToken = data.token;       // הטוקן עצמו
+            
+            userObject.token = authToken; // מוסיפים את הטוקן לאובייקט
+            
+            localStorage.setItem('user', JSON.stringify(userObject)); // שומרים רק אובייקט אחד מעודכן
+            localStorage.removeItem('token'); // מנקים את המפתח הישן (אם קיים)
+            // ------------------------------------
+
             setTimeout(() => {
                 window.location.href = 'homePage.html';
             }, 1500);
@@ -228,13 +237,15 @@ loginButton.addEventListener('click', async (e) => {
     }
 });
 
-// הרשמה
+// ----------------------------------------------------
+// 🎯 קטע 2: הרשמה - **תיקון שמירת הטוקן**
+// ----------------------------------------------------
 registerButton.addEventListener('click', async (e) => {
-    e.preventDefault(); // מונע שליחת טופס רגילה
+    e.preventDefault(); 
     
     const idNumber = registerId.value.trim();
-    const name = registerName.value.trim(); // **שיפור: ניקיון רווחים**
-    const email = registerEmail.value.trim(); // **שיפור: ניקיון רווחים**
+    const name = registerName.value.trim(); 
+    const email = registerEmail.value.trim(); 
     const password = registerPassword.value;
     const confirmPassword = registerConfirmPassword.value;
     
@@ -249,7 +260,6 @@ registerButton.addEventListener('click', async (e) => {
         return;
     }
     
-    // **שיפור: ולידציה לפורמט אימייל**
     if (!validateEmail(email)) {
         showMessage('כתובת אימייל לא תקינה', 'error');
         registerEmail.focus();
@@ -282,9 +292,19 @@ registerButton.addEventListener('click', async (e) => {
         
         if (response.ok) {
             showMessage(data.message, 'success');
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
+
+            // ------------------------------------
+            // ✅ שינוי קריטי: שומרים את הטוקן בתוך אובייקט ה-user
+            // ------------------------------------
+            const userObject = data.user || {}; // אובייקט המשתמש
+            const authToken = data.token;       // הטוקן עצמו
             
+            userObject.token = authToken; // מוסיפים את הטוקן לאובייקט
+            
+            localStorage.setItem('user', JSON.stringify(userObject)); // שומרים רק אובייקט אחד מעודכן
+            localStorage.removeItem('token'); // מנקים את המפתח הישן (אם קיים)
+            // ------------------------------------
+
             setTimeout(() => {
                 window.location.href = 'homePage.html';
             }, 1500);
@@ -299,9 +319,11 @@ registerButton.addEventListener('click', async (e) => {
     }
 });
 
-// שכחתי סיסמה
+// ----------------------------------------------------
+// 🎯 קטע 3: שכחתי סיסמה (ללא שינוי, לא רלוונטי לטוקן)
+// ----------------------------------------------------
 forgotSubmitButton.addEventListener('click', async (e) => {
-    e.preventDefault(); // מונע שליחת טופס רגילה
+    e.preventDefault(); 
     
     const idNumber = forgotId.value.trim();
     
