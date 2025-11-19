@@ -4,39 +4,95 @@ const usersList = document.getElementById('users-list');
 let loadedUsers = [];
 let currentSort = { field: 'name', direction: 1 }; // ברירת מחדל
 
-// ===== אימות משתמש =====
+// ===== אימות משתמש (מתוקן) =====
 function checkAuth() {
-    const token = localStorage.getItem('token');
+    // 🛑 קריאה רק לאובייקט המשתמש
     const userJson = localStorage.getItem('user');
-    if (!token) { window.location.href='login.html'; return false; }
-    try { if (JSON.parse(userJson).role!=='admin') window.location.href='homePage.html'; } 
-    catch(e){ localStorage.clear(); window.location.href='login.html'; }
+
+    if (!userJson) { 
+        // אם אין נתוני משתמש, הפנה להתחברות
+        window.location.href = 'login.html'; 
+        return false; 
+    }
+
+    try { 
+        const user = JSON.parse(userJson);
+        
+        // ודא שיש טוקן בתוך האובייקט (אימות נוסף)
+        if (!user.token) {
+            console.error('שגיאה: אובייקט משתמש קיים, אך ללא טוקן.');
+            localStorage.clear();
+            window.location.href = 'login.html';
+            return false;
+        }
+
+        // בדיקה: אם המשתמש אינו מנהל
+        if (user.role !== 'admin') {
+            alert('אין לך הרשאת גישה לדף זה!');
+            window.location.href = 'homePage.html'; // הפניה לדף הבית אם אין הרשאה
+            return false;
+        }
+    } 
+    catch(e){ 
+        // אם יש שגיאת JSON בנתונים, נקה והפנה להתחברות
+        console.error('שגיאה חמורה בפענוח נתוני משתמש (JSON Corrupt):', e);
+        localStorage.clear(); 
+        window.location.href = 'login.html'; 
+        return false;
+    }
+    
     return true;
 }
 
-// ===== הודעות =====
-function showMessage(text,type){ messageDiv.textContent=text; messageDiv.className=`message ${type}`; messageDiv.classList.remove('hidden'); setTimeout(()=>messageDiv.classList.add('hidden'),5000); }
+// ===== הודעות (ללא שינוי) =====
+function showMessage(text,type){ 
+    messageDiv.textContent=text; 
+    messageDiv.className=`message ${type}`; 
+    messageDiv.classList.remove('hidden'); 
+    setTimeout(()=>messageDiv.classList.add('hidden'),5000); 
+}
 
-// ===== טעינת משתמשים =====
+// ===== טעינת משתמשים (מתוקן) =====
 async function loadUsers() {
     try {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${API_URL}/api/admin/users`, { headers:{ 'Authorization':`Bearer ${token}`,'Content-Type':'application/json'}});
+        // 🛑 קריאה לטוקן מאובייקט המשתמש
+        const userJson = localStorage.getItem('user');
+        const user = JSON.parse(userJson);
+        const token = user.token;
+
+        const res = await fetch(`${API_URL}/api/admin/users`, { 
+            headers:{ 
+                'Authorization':`Bearer ${token}`,
+                'Content-Type':'application/json'
+            }
+        });
+        
+        // טיפול בשגיאת 401/403 מהשרת
+        if (res.status === 401 || res.status === 403) {
+            console.error('❌ הטוקן נדחה על ידי השרת. הפנייה להתחברות.');
+            logout();
+            return;
+        }
+
         if(!res.ok) throw new Error('שגיאה בטעינת המשתמשים');
+        
         loadedUsers = await res.json();
         loadedUsers.forEach(u=>{ u.roleText = getRoleText(u.role); });
         applySortAndDisplay();
-    } catch(err){ usersList.innerHTML=`<tr><td colspan="6" style="text-align:center;color:red;">${err}</td></tr>`; }
+        
+    } catch(err){ 
+        usersList.innerHTML=`<tr><td colspan="6" style="text-align:center;color:red;">שגיאה בטעינה: ${err.message || err}</td></tr>`; 
+    }
 }
 
-// ===== מיון והצגה =====
+// ===== מיון והצגה (ללא שינוי) =====
 function applySortAndDisplay(){
     const sorted=[...loadedUsers].sort((a,b)=> ( (a[currentSort.field]||'').toString().toLowerCase().localeCompare((b[currentSort.field]||'').toString().toLowerCase()) )*currentSort.direction);
     displayUsers(sorted);
 }
 function toggleSortDirection(){ currentSort.direction*=-1; applySortAndDisplay(); }
 
-// ===== הצגת משתמשים =====
+// ===== הצגת משתמשים (ללא שינוי) =====
 function displayUsers(users){
     if(!users.length){ usersList.innerHTML='<tr><td colspan="6" style="text-align:center;">אין משתמשים</td></tr>'; return; }
     usersList.innerHTML=users.map(u=>`
@@ -64,7 +120,8 @@ function getRoleText(role){ return {'student':'תלמיד','admin':'מנהל'}[r
 // ===== עדכון תפקיד =====
 async function updateRole(id){
     try{
-        const token=localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+        const token=user.token;
         const role=document.getElementById(`role-${id}`).value;
         const res=await fetch(`${API_URL}/api/admin/users/${id}/role`,{method:'PUT', headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'}, body:JSON.stringify({role})});
         const data=await res.json();
@@ -76,7 +133,8 @@ async function updateRole(id){
 async function deleteUser(id){
     if(!confirm('בטוח למחוק?')) return;
     try{
-        const token=localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+        const token=user.token;
         const res=await fetch(`${API_URL}/api/admin/users/${id}`,{method:'DELETE',headers:{'Authorization':`Bearer ${token}`}});
         const data=await res.json();
         showMessage(data.message,res.ok?'success':'error'); loadUsers();
@@ -86,7 +144,7 @@ async function deleteUser(id){
 // ===== התנתקות =====
 function logout(){ localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href='login.html'; }
 
-// ===== Dropdown מיון =====
+// ===== Dropdown מיון (משוחזר לגרסה שרק פותחת/סוגרת) =====
 const sortBtn = document.getElementById('sort-btn');
 const sortList = document.getElementById('sort-list');
 
@@ -106,3 +164,5 @@ document.addEventListener('click',e=>{
 
 // ===== טעינה ראשונית =====
 if(checkAuth()) loadUsers();
+
+console.log('✅ admin.js נטען בהצלחה');

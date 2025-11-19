@@ -29,7 +29,7 @@ router.put('/users/:id/role', authenticateToken, isAdmin, async (req, res) => {
     const userId = req.params.id;
 
     // בדיקה שהתפקיד תקין
-    if (!['student', 'instructor', 'admin'].includes(role)) {
+    if (!['student', 'admin'].includes(role)) {
       return res.status(400).json({ message: 'תפקיד לא תקין' });
     }
 
