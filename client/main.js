@@ -87,6 +87,58 @@ if (signupForm) {
         }
     });
 }
+document.addEventListener('DOMContentLoaded', () => {
+    const userJson = localStorage.getItem('user');
+    const isLoggedIn = !!userJson;
+
+    const courseCards = document.querySelectorAll('.course-card');
+    const cardsContainer = document.querySelector('.courses-cards');
+
+    if (!cardsContainer) return;
+
+    if (isLoggedIn) {
+        // מצב: משתמש מחובר → משאירים כפתורים ומחברים אותם לעמוד התשלום
+        courseCards.forEach(card => {
+            const btn = card.querySelector('.buy-btn');
+            if (btn) {
+                btn.style.display = 'block'; 
+                btn.addEventListener('click', () => {
+                    window.location.href = 'paymentPage.html';
+                });
+            }
+        });
+
+    } else {
+        // מצב: אורח → מסתירים את כל כפתורי "קנו עכשיו"
+        courseCards.forEach(card => {
+            const btn = card.querySelector('.buy-btn');
+            if (btn) btn.style.display = 'none';
+        });
+
+        // יוצרים כפתור התחברות אחד מתחת לכל הקורסים
+        const loginBtn = document.createElement('button');
+        loginBtn.textContent = 'לקנייה התחברו';
+        loginBtn.classList.add('login-buy-btn');
+        loginBtn.style.marginTop = '25px';
+        loginBtn.style.padding = '12px 22px';
+        loginBtn.style.fontSize = '18px';
+        loginBtn.style.borderRadius = '8px';
+        loginBtn.style.border = 'none';
+        loginBtn.style.cursor = 'pointer';
+        loginBtn.style.backgroundColor = '#6507fa';
+        loginBtn.style.color = '#fff';
+        loginBtn.style.display = 'block';
+        loginBtn.style.marginLeft = 'auto';
+        loginBtn.style.marginRight = 'auto';
+
+        loginBtn.addEventListener('click', () => {
+            window.location.href = 'login.html';
+        });
+
+        // מוסיפים מתחת לרשימת הקורסים
+        cardsContainer.insertAdjacentElement('afterend', loginBtn);
+    }
+});
 
 // ----------------------
 // טעינת רשימת קורסים
