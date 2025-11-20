@@ -10,7 +10,6 @@ body {
     background: radial-gradient(circle farthest-corner at center center, #131060 0%, #100D58 50%, #06033E 100%);
     padding: 20px;
     overflow-x: hidden;
-
 }
 
 .container {
@@ -61,6 +60,45 @@ h1 {
 .message.success { background-color:#d4edda; color:#155724; border:1px solid #c3e6cb; }
 .message.error { background-color:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
 
+/* סגנון חדש/מעודכן: ניהול טאבים (Tab Buttons) */
+.main-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tab-btn {
+    flex-grow: 1;
+    max-width: 300px;
+    background-color: #f0f0f0;
+    color: #333;
+    border: none;
+    padding: 15px 30px;
+    margin: 0 5px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tab-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.tab-btn.active {
+    background: linear-gradient(to right, #6507FA 0%, #A92FFB 50%, #E39A65 100%); 
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* סגנונות משתמשים ומיון (לא שונו) */
 .users-table {
     background-color: white;
     border-radius: 25px;
@@ -122,6 +160,22 @@ select:focus { border-color: #6507FA; outline: none; }
 .btn-delete { background-color:#f44336; color:white; }
 .btn-delete:hover { background-color:#da190b; }
 
+/* סגנון חדש: כפתור צפייה */
+.btn-view { 
+    background-color: #007bff; /* כחול */
+    color: white; 
+}
+.btn-view:hover { 
+    background-color: #0056b3; 
+}
+
+.btn-edit {
+    background-color: #FFC107; /* צהוב/כתום */
+    color: #333;
+}
+.btn-edit:hover { background-color: #e0a800; } 
+
+
 /* ====== כפתור dropdown מיון ====== */
 .sort-container {
     position: relative;
@@ -162,8 +216,6 @@ select:focus { border-color: #6507FA; outline: none; }
 
 .sort-dropdown-list li:hover { background-color:#f0f0f0; }
 
-.hidden { display:none; }
-
 .sort-btn {
     background: linear-gradient(to left, #E39A65 0%, #A92FFB 35%, #6507FA 60%, #4B12D5 80%, #3919BB 100%);
     color: white;
@@ -178,3 +230,119 @@ select:focus { border-color: #6507FA; outline: none; }
 }
 
 .sort-btn:hover { opacity:0.85; }
+
+.hidden { display: none; }
+
+/* ------------------------------------------------------------------ */
+/* ----------- ניהול קורסים (Courses Section) ------------------------ */
+/* ------------------------------------------------------------------ */
+
+.admin-section {
+    background-color: white;
+    border-radius: 25px;
+    padding: 30px;
+    margin-top: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.course-list-container {
+    display: block; 
+}
+
+/* סגנון כרטיס קורס בודד (שורה מלאה) */
+.course-card {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    width: 100%; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.course-card:hover {
+    background-color: #f0f0f0;
+}
+
+.course-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-grow: 1;
+}
+
+.course-info img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.course-details {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.course-details h3 {
+    font-size: 18px;
+    color: #4B12D5;
+    margin: 0;
+}
+
+.course-details p {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+}
+
+.course-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* טופס עריכה Inline (מתחת לשורה) */
+.course-edit-inline {
+    background-color: #e3f2fd;
+    border: 1px solid #c3e6cb;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.course-edit-inline h3 {
+    margin-top: 0;
+    color: #1976d2;
+    border-bottom: 1px solid #c3e6cb;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.edit-form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: 600;
+    color: #333;
+}
+
+.edit-form input[type="text"], 
+.edit-form input[type="number"],
+.edit-form input[type="url"],
+.edit-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.form-actions {
+    margin-top: 20px;
+    text-align: right;
+}
