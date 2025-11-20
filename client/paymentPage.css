@@ -29,7 +29,7 @@ body {
     /* רקע כמו ב-Login */
     background: radial-gradient(circle farthest-corner at center center, #131060 0%, #100D58 50%, #06033E 100%);
     min-height: 100vh;
-    padding: 20px;
+
 }
 
 /*
@@ -190,6 +190,11 @@ body {
 }
 .add-btn:hover {
     background-color: #d4edda;
+}
+
+#chosenCard{
+
+    margin-bottom:20px;
 }
 
 /*
