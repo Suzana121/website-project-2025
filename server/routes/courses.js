@@ -22,10 +22,12 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+// ----------------------------------------------------
 // GET /api/courses/my-courses - מחזיר את כל הקורסים של המשתמש המחובר
+// ----------------------------------------------------
 router.get('/my-courses', authenticateToken, async (req, res) => {
   try {
-const userId = req.user.userId;
+    const userId = req.user.userId;
 
     // מוצא את כל הקורסים שהמשתמש רשום בהם
     const courses = await Course.find({ students: userId })
@@ -45,9 +47,34 @@ const userId = req.user.userId;
     });
   }
 });
-// הוסיפי את זה ב-courses.js:
 
+// ----------------------------------------------------
+// GET /api/courses/all-available - מחזיר את כל הקורסים הזמינים לרכישה (חדש)
+// ----------------------------------------------------
+router.get('/all-available', async (req, res) => {
+  try {
+    // שליפת כל הקורסים מהדאטה בייס ללא צורך באימות (פומבי)
+    const courses = await Course.find()
+      .populate('instructor', 'name email')
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      courses: courses,
+      count: courses.length
+    });
+  } catch (error) {
+    console.error('שגיאה בשליפת כל הקורסים:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'שגיאה בשליפת הקורסים הזמינים' 
+    });
+  }
+});
+
+// ----------------------------------------------------
 // POST /api/courses/purchase - רכישת קורסים
+// ----------------------------------------------------
 router.post('/purchase', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -76,7 +103,8 @@ router.post('/purchase', authenticateToken, async (req, res) => {
 
     // מוסיף את המשתמש לכל קורס (אם הוא עדיין לא רשום)
     const updatePromises = courses.map(course => {
-      if (!course.students.includes(userId)) {
+      // יש לוודא שהקורס מכיל את השדה students ושהוא מערך
+      if (course.students && !course.students.includes(userId)) {
         course.students.push(userId);
         console.log('➕ מוסיף משתמש לקורס:', course.title);
         return course.save();
@@ -108,7 +136,10 @@ router.post('/purchase', authenticateToken, async (req, res) => {
     });
   }
 });
+
+// ----------------------------------------------------
 // GET /api/courses/:id - מחזיר קורס בודד
+// ----------------------------------------------------
 router.get('/:id', authenticateToken, async (req, res) => {
   try {
     const course = await Course.findById(req.params.id)
@@ -138,7 +169,9 @@ router.get('/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// GET /api/courses - מחזיר את כל הקורסים (לעמוד הבית)
+// ----------------------------------------------------
+// GET /api/courses - מחזיר את כל הקורסים (לעמוד הבית - לשימוש כללי)
+// ----------------------------------------------------
 router.get('/', async (req, res) => {
   try {
     const courses = await Course.find()

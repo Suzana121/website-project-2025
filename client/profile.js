@@ -200,7 +200,7 @@ function goToCourse(courseId) {
     alert(`פותחים את הקורס...\n\nID: ${courseId}\n\n(כשתהיה לך דף קורס, תשני את הקוד פה)`);
     
     // דוגמה למה שצריך להיות:
-    // window.location.href = `course-learning.html?id=${courseId}`;
+    window.location.href = `course-learning.html?id=${courseId}`;
 }
 
 // התנתקות

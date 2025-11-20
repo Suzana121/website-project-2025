@@ -1,50 +1,3 @@
-<!--<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>קורס JavaScript</title>
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header class="site-header">
-    <div class="header-container">
-      <a class="logo" href="index.html">חזרה לבית</a>
-      <nav class="main-nav">
-        <ul>
-          <li><a href="course-html-css.html">HTML & CSS</a></li>
-          <li><a href="course-javascript.html">JavaScript</a></li>
-          <li><a href="course-node-express.html">Node & Express</a></li>
-        </ul>
-      </nav>
-      <button class="header-cta" onclick="location.href='#learn'">לצפייה בסרטון</button>
-    </div>
-  </header>
-
-  <section class="hero_class">
-    <div class="right_container">
-      <h1 class="hero_h">JavaScript</h1>
-      <p class="hero_p">ES6+, DOM, אירועים ו־fetch.</p>
-      <button class="hero_b" onclick="document.getElementById('learn').scrollIntoView({behavior:'smooth'})">למטה לסרטון</button>
-    </div>
-    <div class="left_container"></div>
-  </section>
-
-  <section id="learn" class="strengths_c">
-    <div class="lottie-main">
-      
-        <section id="youtubeSection" data-video-id="NCwa_xi0Uuc">
-          <h4 id="youtubeTitle"></h4>
-          <p id="youtubeDescription"></p>
-       
-  <script src="youtube.js"></script>
-  <script src="weather.js"></script>
-  <script src="/client/loadHeader.js"></script>
-</body>
-</html>-->
-
-
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -60,20 +13,7 @@
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="header-container">
-      <a class="logo" href="index.html">חזרה לבית</a>
-      <nav class="main-nav">
-        <ul>
-          <li><a href="course-html-css.html">HTML & CSS</a></li>
-          <li><a href="course-javascript.html">JavaScript</a></li>
-          <li><a href="course-node-express.html">Node & Express</a></li>
-        </ul>
-      </nav>
-      <button class="header-cta" onclick="location.href='#learn'">לצפייה בסרטון</button>
-    </div>
-  </header>
+  
 
   <!-- HERO -->
   <section class="hero_class">
@@ -95,14 +35,12 @@
       <section
         id="youtubeSection"
         class="course-video"
-        data-video-id="NCwa_xi0Uuc"   <!-- סרטון פתיחה -->
-        data-playlist-id="PLsyeobzWxl7rrvgG7MLNIMSTzVCDZZcT4"  <!-- הפלייליסט שלך -->
+        data-video-id="NCwa_xi0Uuc"
+        data-playlist-id="PLsyeobzWxl7rrvgG7MLNIMSTzVCDZZcT4"
       >
         <h2 id="youtubeTitle" class="video-title"></h2>
         <div id="youtubeDescription" class="video-desc"></div>
-      </section>
-
-      <!-- פלייליסט -->
+      </section>   <!-- פלייליסט -->
       <aside class="playlist">
         <h3 class="playlist-title">תוכן הקורס</h3>
         <div id="playlistList" class="playlist-list"></div>
@@ -119,6 +57,7 @@
   <!-- JS -->
   <script src="youtube.js"></script>
   <script src="weather.js"></script>
+    <script src="/client/loadHeader.js"></script>
 
 </body>
 </html>

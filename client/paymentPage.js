@@ -23,12 +23,104 @@ function updateTotals() {
 // פונקציה לעדכון visibility לפי תוכן (מסתיר את כרטיס הקורסים שבחרתי אם הוא ריק)
 function updateSectionsVisibility() {
     const chosen = document.getElementById('chosen');
-    const bonus = document.getElementById('bonus');
+    // const bonus = document.getElementById('bonus'); // לא נחוץ
     const chosenCard = document.getElementById('chosenCard');
     const bonusCard = document.getElementById('bonusCard');
 
-    chosenCard.style.display = chosen.children.length ? 'block' : 'none';
-    bonusCard.style.display = bonus.children.length ? 'block' : 'none';
+    // נניח ש-chosenCard ו-bonusCard הם הדיבים העוטפים עם ה-ID הזה
+    if (chosenCard) {
+        chosenCard.style.display = chosen.children.length ? 'block' : 'none';
+    }
+    // נניח ש-bonusCard תמיד מוצג אם יש בו תוכן, או תלוי במספר הילדים
+    // if (bonusCard) {
+    //     bonusCard.style.display = bonus.children.length ? 'block' : 'none';
+    // }
+}
+
+
+// ----------------------
+// 🛒 לוגיקת טעינת כל הקורסים הזמינים (חדש)
+// ----------------------
+async function loadAllAvailableCourses() {
+    const coursesContainer = document.getElementById('bonus');
+    
+    // ⚠️ החלף בנקודת הקצה הנכונה שמחזירה את *כל* הקורסים
+    const API_URL = 'http://localhost:8000/api/courses/all-available'; 
+    
+    coursesContainer.innerHTML = '<p style="text-align: center; color: #6507FA; padding: 20px;">טוען את הקורסים הזמינים...</p>';
+    
+    try {
+        // שליפה ללא אימות (אם הקורסים הם ציבוריים)
+        const response = await fetch(API_URL); 
+        
+        if (!response.ok) {
+            throw new Error(`שגיאת HTTP: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        // נניח שהשרת מחזיר { courses: [...] }
+        const courses = data.courses || []; 
+
+        coursesContainer.innerHTML = ''; // מנקה את הטוען
+
+        if (courses.length === 0) {
+            coursesContainer.innerHTML = '<p style="text-align: center; color: #555; padding: 20px;">אין קורסים זמינים כרגע.</p>';
+            return;
+        }
+        
+        // יצירת אלמנטים HTML והוספתם ל-DOM
+        courses.forEach(course => {
+            const courseElement = createCourseCard(course);
+            coursesContainer.appendChild(courseElement);
+        });
+        
+        // לאחר הטעינה, מעדכנים את סטטוס "נרכש"
+        initUserCourses(); 
+
+    } catch (error) {
+        console.error("❌ שגיאה בטעינת כל הקורסים הזמינים:", error);
+        coursesContainer.innerHTML = `<p style="text-align: center; color: #e53e3e; padding: 20px;">שגיאה בטעינת הקורסים. נסה לרענן.</p>`;
+    }
+}
+
+
+// ----------------------
+// 🖼️ פונקציה ליצירת כרטיס קורס (HTML) (חדש)
+// ----------------------
+function createCourseCard(course) {
+    // מטפל במקרה שה-ID הוא אובייקט (MongoDB ObjectId) או מחרוזת
+    const courseId = course._id.$oid || course._id;
+    const price = fmt(course.price || 0);
+    const tagline = course.tagline || course.description || 'קורס ללא תיאור';
+    
+    // בחירת אייקון
+    let courseIcon = '📚';
+    if (course.title.includes('HTML') || course.title.includes('CSS')) courseIcon = '🎨';
+    else if (course.title.includes('JavaScript') || course.title.includes('JS')) courseIcon = '💻';
+    else if (course.title.includes('Node') || course.title.includes('Express')) courseIcon = '⚙️';
+    
+    // בניית האלמנט
+    const courseDiv = document.createElement('div');
+    courseDiv.className = 'course';
+    courseDiv.dataset.id = courseId;
+    courseDiv.dataset.price = course.price; // חשוב לחישובים
+
+    // מבנה הכרטיס (יש להתאים למבנה ה-CSS שלך)
+    courseDiv.innerHTML = `
+        <div class="course-info">
+            <span class="course-icon" style="font-size: 24px; margin-left: 10px;">${courseIcon}</span>
+            <div class="course-details">
+                <h4 class="course-title" style="margin: 0;">${course.title}</h4>
+                <p class="course-tagline" style="margin: 0; font-size: 14px; opacity: 0.8;">${tagline}</p>
+            </div>
+        </div>
+        <div class="course-actions">
+            <span class="course-price" style="font-weight: bold; margin-left: 15px;">${price} ₪</span>
+            <button class="add-btn" title="הוסף" style="padding: 6px 15px; font-size: 14px; border-radius: 6px;">הוסף</button>
+        </div>
+    `;
+    
+    return courseDiv;
 }
 
 
@@ -47,12 +139,10 @@ async function initUserCourses() {
         return;
     }
 
-    // שליפת הטוקן בצורה מוגנת
     const token = user.token || localStorage.getItem('token');
     if (!token) return;
 
     try {
-        // שליפת רשימת הקורסים שנרכשו על ידי המשתמש הנוכחי
         const response = await fetch('http://localhost:8000/api/courses/my-courses', {
             method: 'GET',
             headers: {
@@ -66,30 +156,27 @@ async function initUserCourses() {
         }
 
         const data = await response.json();
-        
-        // יצירת מערך של ID-ים בלבד
-        const purchasedCourseIds = (data.courses || []).map(course => course._id.toString());
+        const purchasedCourseIds = (data.courses || []).map(course => (course._id.$oid || course._id).toString());
 
         console.log("🔵 קורסים שנרכשו על ידי משתמש (IDs):", purchasedCourseIds);
         
-        // מעבר על כל הקורסים הזמינים והתאמת הממשק
         const allAvailableCourses = document.querySelectorAll('.course');
         const chosenContainer = document.getElementById('chosen');
 
         allAvailableCourses.forEach(course => {
+            // הוספת טיפול לשני סוגי ה-ID: ObjectId ו-String
             const courseId = course.dataset.id;
             const addBtn = course.querySelector('.add-btn');
             const removeBtn = course.querySelector('.remove-btn');
             const actionsDiv = course.querySelector('.course-actions');
             
             if (purchasedCourseIds.includes(courseId)) {
-                // הקורס כבר נרכש!
                 
-                // הסתרת כפתורי הוסף/הסר
+                // 1. הסתרת כפתורי הוסף/הסר
                 if (addBtn) addBtn.style.display = 'none';
                 if (removeBtn) removeBtn.style.display = 'none';
 
-                // הוספת הודעת "נרכש"
+                // 2. הוספת הודעת "נרכש"
                 const purchasedTag = document.createElement('span');
                 purchasedTag.textContent = '✅ נרכש';
                 purchasedTag.classList.add('purchased-tag');
@@ -100,8 +187,8 @@ async function initUserCourses() {
                     actionsDiv.appendChild(purchasedTag);
                 }
                 
-                // אם הקורס עדיין נמצא בסל (chosen), מעבירים אותו ל-bonus
-                if (chosenContainer.contains(course)) {
+                // 3. אם הקורס עדיין נמצא בסל (chosen), מעבירים אותו ל-bonus
+                if (chosenContainer && chosenContainer.contains(course)) {
                     document.getElementById('bonus').appendChild(course);
                 }
             }
@@ -133,6 +220,7 @@ document.getElementById('bonus').addEventListener('click', e => {
         btn.className = 'remove-btn';
         btn.textContent = 'הסר';
         btn.title = 'הסר';
+        btn.style.backgroundColor = '#e53e3e'; // צבע אדום להסרה
 
         updateTotals();
         updateSectionsVisibility();
@@ -150,6 +238,7 @@ document.getElementById('chosen').addEventListener('click', e => {
             btn.className = 'add-btn';
             btn.textContent = 'הוסף';
             btn.title = 'הוסף';
+            btn.style.backgroundColor = ''; // חזרה לצבע ברירת מחדל
 
             updateTotals();
             updateSectionsVisibility();
@@ -280,10 +369,10 @@ document.getElementById('paymentForm').addEventListener('submit', async function
 // 🎯 הפעלת פונקציות ראשוניות
 // ----------------------
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. הפעלת בדיקת הקורסים הנרכשים מיד
-    initUserCourses();
+    // 1. טעינת כל הקורסים הזמינים (תפעיל בתוכה את initUserCourses)
+    loadAllAvailableCourses();
     
-    // 2. עדכון ראשוני של הסכומים (יקרה גם בתוך initUserCourses, אבל מומלץ לוודא)
+    // 2. עדכון ראשוני של הסכומים (מופעל שוב לאחר טעינת הקורסים)
     updateSectionsVisibility();
     updateTotals(); 
     
