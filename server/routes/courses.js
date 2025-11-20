@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router(); // הגדרת אובייקט הראוטר (חיוני!)
+const router = express.Router();
 const Course = require('../models/course.js');
 const User = require('../models/user.js');
 const jwt = require('jsonwebtoken');
@@ -20,7 +20,7 @@ const authenticateToken = (req, res, next) => {
       // אם הטוקן פג תוקף או אינו תקין
       return res.status(403).json({ message: 'טוקן לא תקין או פג תוקף' });
     }
-    // הטוקן תקין, מוסיפים את נתוני המשתמש לבקשה
+    // הטוקן תקין, מוסיפים את נתוני המשתמש (כולל userId ו-role) לבקשה
     req.user = user;
     next();
   });
@@ -152,6 +152,7 @@ router.get('/my-courses', authenticateToken, async (req, res) => {
 
 // ----------------------------------------------------
 // 👁️ GET /api/courses/:id - מחזיר קורס בודד (לדף single-course)
+// 🛑 שינוי: מאפשר גישה לאדמין ללא בדיקת הרשמה/תשלום.
 // ----------------------------------------------------
 router.get('/:id', authenticateToken, async (req, res) => {
   try {
@@ -165,14 +166,38 @@ router.get('/:id', authenticateToken, async (req, res) => {
       });
     }
 
-    // בדיקה אם המשתמש רשום לקורס
-    const isEnrolled = course.students.map(id => id.toString()).includes(req.user.userId);
+    const userId = req.user.userId;
+    const userRole = req.user.role; // ודא ש-role נשמר ב-Token
 
+    // 1. בדיקת הרשאת אדמין: אם התפקיד הוא 'admin', מאשרים גישה מיידית
+    if (userRole === 'admin') {
+      return res.json({
+        success: true,
+        course: course,
+        isEnrolled: true, // אדמין תמיד נחשב כבעל הרשאה מלאה
+        isAdmin: true
+      });
+    }
+
+    // 2. בדיקת הרשאה לסטודנטים: בדיקה אם המשתמש רשום לקורס
+    const isEnrolled = course.students.map(id => id.toString()).includes(userId);
+
+    if (!isEnrolled) {
+        // אם המשתמש לא אדמין ולא רשום, חוסמים גישה
+        return res.status(403).json({ 
+            success: false, 
+            message: 'אינך רשאי לצפות בתוכן זה. נא לרכוש את הקורס.',
+            isEnrolled: false
+        });
+    }
+
+    // אם המשתמש הוא סטודנט רשום
     res.json({
       success: true,
       course: course,
-      isEnrolled: isEnrolled
+      isEnrolled: true
     });
+    
   } catch (error) {
     console.error('שגיאה בשליפת קורס בודד:', error);
     res.status(500).json({ 

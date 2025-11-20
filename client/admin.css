@@ -8,7 +8,7 @@ body {
     font-family: 'Heebo', sans-serif;
     min-height: 100vh;
     background: radial-gradient(circle farthest-corner at center center, #131060 0%, #100D58 50%, #06033E 100%);
-    padding: 20px;
+
     overflow-x: hidden;
 }
 

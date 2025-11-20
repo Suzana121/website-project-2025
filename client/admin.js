@@ -176,7 +176,7 @@ function displayCourses(courses){
                 </div>
             </div>
             <div class="course-actions">
-                <button class="btn btn-view" onclick="viewCourse('${c._id}')">צפייה 👁️</button> 
+                <button class="btn btn-view" onclick="viewCourse('${c._id}')">צפייה</button> 
                 <button class="btn btn-edit" onclick="openCourseForm('edit', '${c._id}')">ערוך</button>
                 <button class="btn btn-delete" onclick="deleteCourse('${c._id}')">מחק</button>
             </div>
@@ -198,7 +198,7 @@ openCreateCourseBtn.addEventListener('click', () => {
  */
 function viewCourse(courseId) {
     // 💡 מניח שדף הקורס הוא course.html והוא מקבל ID כפרמטר
-    window.open(`course.html?id=${courseId}`, '_blank');
+    window.open(`single-course.html?id=${courseId}`, '_blank');
 }
 
 
