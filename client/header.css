@@ -1,166 +1,148 @@
-/* ====================================
-   סגנונות כלליים ל-Header
-   ==================================== */
+/* ====== סגנונות חדשים לניהול קורסים וטאבים ====== */
 
-div,ul, h1, h2, h3, h4, p, button {
-    font-family: heebo, sans-serif;
-    direction: rtl;
-}
-
-
-.site-header {
+/* ניהול טאבים (Tabbed Interface) */
+.main-tabs {
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 20px;
     display: flex;
-    position: sticky;
-    top: 0; 
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    
-    /* צבע רקע רגיל */
-    background-color: #06033e80; 
-    opacity: 1; /* התחלה עם שקיפות */
-    
-    /* 🌟 שינוי 2: הוספת אפקט טשטוש לרקע (Glassmorphism) */
-    backdrop-filter: blur(15px); 
-    -webkit-backdrop-filter: blur(15px); /* תמיכה בדפדפני WebKit */
-    
-    padding: 15px; 
-
-    margin: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    z-index: 9999;
-    transition: background-color 0.3s ease, opacity 0.3s ease; /* הוספת מעבר לשקיפות */
+    justify-content: flex-start;
+    gap: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
-.site-header.scrolled {
-    opacity: 0.4; /* שקיפות מלאה כאשר גוללים */
-}
-
-/* ... שאר קוד ה-CSS נשאר ללא שינוי ... */
-
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;
-    width: 100%;
-}
-
-.logo {
-  text-decoration: none;
-  color: #ffffff;
-  font-weight: bold;
-  font-family: "Heebo", sans-serif;
-  font-size: 22px; 
-}
-
-/* =====================10===20===rgba(248, 248, 248, 0.045)ניווט (Menu)
-   ==================================== */
-
-.main-nav ul {
-    display: flex;
-    list-style: none;
-    gap: 1.5rem; /* מרווח בין קישורים */
-    margin: 0;
-    padding: 0;
-    font-size: 18px; 
-    font-weight: 500;
-}
-
-.main-nav a {
-    text-decoration: none;
-    color: #ffffff;
-    transition: color 0.3s ease;
-}
-
-.main-nav a:hover {
-    color: #6507fa;
-}
-
-/* ====================================
-   סגנונות כפתור CTA (רק למצב אורח)
-   ===============5==================== */
-
-.header-cta {
-    padding: 0.5rem 1.5rem;
-    border-radius: 20px;
+.tab-btn {
+    background-color: transparent;
     border: none;
-    background-color: #6507fa;
-    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-decoration: none; /* כדי שהקישור ייראה ככפתור */
-    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.header-cta:hover {
-    background-color: #a92ffb;
+.tab-btn:hover { background-color: #f0f0f0; }
+
+.tab-btn.active {
+    background: linear-gradient(to right, #6507FA, #A92FFB);
+    color: white;
+    font-weight: 700;
 }
 
-/* ====================================
-   סגנונות סטטוס משתמש דינמי (Flexbox)
-   ==================================== */
-
-/* הגדרת הקונטיינר הראשי ל-Flex column */
-.header-cta-dynamic {
-    display: flex;
-    flex-direction: column; 
-    justify-content: center;
-    align-items: center; /* יישור לימין (RTL) */
-    text-align: center;
-    font-size: 18px;
-    padding: 0; 
-    min-width: 250px; 
+.content-section {
+    padding: 30px;
+    background-color: white;
+    border-radius: 25px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
 }
 
-/* שורה 1: טקסט הברכה */
-.header-cta-dynamic .welcome-text {
-    width: 100%; /* תופס את כל הרוחב כדי ליצור שבירת שורה */
-    font-weight: 600; 
-    color: #ffffff;
-    margin-bottom: 2px;
-    white-space: nowrap; /* מונע שבירת שורה בתוך השם */
-    display: flex;
-    flex-direction: column; 
-    justify-content: center;
-
+.content-section h2 {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
 }
 
-/* שורה 2: קונטיינר הקישורים - מכיל אזור אישי/ניהול והתנתקות */
-.header-cta-dynamic .status-links-row {
-    display: flex; 
-    width: 100%; 
-    justify-content: center;
-    flex-wrap: nowrap;
-    align-items: center;
-
+/* טבלת קורסים (Courses Table) */
+.courses-table {
+    width: 100%;
+    border-collapse: collapse;
 }
-.header-cta-dynamic .seperetor{
+
+.courses-table th:nth-child(1) { width: 100px; } /* ID מקוצר */
+.courses-table th:nth-child(3) { width: 120px; } /* מחיר */
+.courses-table th:nth-child(4) { width: 250px; } /* פעולות */
+
+.btn-create {
+    background-color: #008CBA;
     color: white;
 }
 
-/* הגדרת הקישורים */
-.header-cta-dynamic .status-link {
+.btn-create:hover {
+    background-color: #007bb5;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+.btn-info:hover {
+    background-color: #138496;
+}
+
+
+/* ====== סגנונות מודל (Modal) ====== */
+.modal {
+    position: fixed;
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6); /* רקע כהה שקוף */
+    padding-top: 50px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; /* ממורכז אנכית ואופקית */
+    padding: 30px;
+    border: 1px solid #888;
+    width: 90%; 
+    max-width: 600px;
+    border-radius: 15px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.close-btn {
+    color: #aaa;
+    float: left;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #333;
     text-decoration: none;
-    color: #ffffff; /* צבע המותג */
-    font-size: 0.85em;
-    padding: 0 5px; 
-    transition: color 0.3s ease;
-    /* (אין צורך ב-flex-basis: 50%; מכיוון שאין כפתור, זה ייראה יותר טבעי) */
 }
 
-/* קו הפרדה בין הקישורים (ימין לוגית ב-RTL) */
-.header-cta-dynamic .profile-link,
-.header-cta-dynamic .nav-link { /* כולל גם ניהול/אזור אישי */
-    border-left: 1px solid #ccc; 
+/* טופס בתוך המודל */
+#course-form label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
 }
 
-/* הסרת קו ההפרדה מהקישור הראשון משמאל (כדי שהפרדה תהיה רק באמצע) */
-.header-cta-dynamic .status-links-row a:first-child {
-    border-left: none;
+#course-form input[type="text"],
+#course-form input[type="number"],
+#course-form input[type="url"],
+#course-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
 }
 
-
-.header-cta-dynamic .status-link:hover {
-    color: #a92ffb; 
+.form-actions {
+    margin-top: 30px;
+    text-align: center;
 }
+
+.form-actions .btn {
+    margin: 0 10px;
+    padding: 10px 30px;
+    font-size: 16px;
+}
+
+.hidden { display: none; }

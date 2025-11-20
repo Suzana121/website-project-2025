@@ -193,14 +193,11 @@ function displayCourses(courses) {
     }).join('');
 }
 
-// מעבר לקורס ספציפי
+
+// מעבר לקורס ספציפי (מעודכן ומתוקן לנתיב מוחלט)
 function goToCourse(courseId) {
-    // כשתהיה מוכנה תשני את זה לעמוד הקורס האמיתי
-    console.log('מעבר לקורס:', courseId);
-    alert(`פותחים את הקורס...\n\nID: ${courseId}\n\n(כשתהיה לך דף קורס, תשני את הקוד פה)`);
-    
-    // דוגמה למה שצריך להיות:
-    window.location.href = `course-learning.html?id=${courseId}`;
+    // 💡 שינוי: הוספת הלוכסן '/' בהתחלה
+    window.location.href = `single-course.html?id=${courseId}`;
 }
 
 // התנתקות

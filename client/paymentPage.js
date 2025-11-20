@@ -330,7 +330,7 @@ document.getElementById('paymentForm').addEventListener('submit', async function
 
     try {
         // שליחת הבקשה לשרת
-        const response = await fetch('http://localhost:8000/api/courses/purchase', {
+        const response = await fetch('http://localhost:8000/courses/purchase', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

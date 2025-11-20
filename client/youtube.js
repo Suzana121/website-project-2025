@@ -1,5 +1,3 @@
-
-
 // youtube.js — וידאו בודד + פלייליסט
 
 /* ===== פונקציות עזר לטקסט ===== */
@@ -33,10 +31,11 @@ const linkify = (str = "") =>
 const guessDir = (text = "") => (/[א-ת]/.test(text) ? "rtl" : "ltr");
 
 /* ===== הגדרות כלליות ===== */
-const apiKey = "AIzaSyCrCJQqXjiLJgsh2tcRluFsfP-aBpVrxLo"; // מפתח ה-API שלך
+// ⚠️ ודא שהמפתח שלך עדיין תקף!
+const apiKey = "AIzaSyCrCJQqXjiLJgsh2tcRluFsfP-aBpVrxLo"; 
 const DEFAULT_PLAYLIST_ID = "PL0eyrZgxdwhwNC5ppZo_dYGVjerQY3xYU";
 
-/* ===== וידאו בודד לפי videoId ===== */
+/* ===== וידאו בודד לפי videoId (פונקציה זו חיונית ל-loadCourse.js) ===== */
 async function fetchYouTubeVideo(videoId) {
   const url = `https://www.googleapis.com/youtube/v3/videos?id=${encodeURIComponent(
     videoId
@@ -45,8 +44,9 @@ async function fetchYouTubeVideo(videoId) {
   const section = document.getElementById("youtubeSection");
   const titleEl = document.getElementById("youtubeTitle");
   const descEl = document.getElementById("youtubeDescription");
+  const videoPlayerEl = document.getElementById("videoPlayer");
 
-  if (!section) return;
+  if (!section || !videoPlayerEl) return;
 
   try {
     const res = await fetch(url);
@@ -57,12 +57,13 @@ async function fetchYouTubeVideo(videoId) {
     if (!item) {
       if (titleEl) titleEl.textContent = "לא נמצא סרטון";
       if (descEl) descEl.textContent = "בדקי את ה־videoId או את מפתח ה־API.";
+      videoPlayerEl.innerHTML = '<p style="text-align:center;">וידאו חסר או לא זמין.</p>';
       return;
     }
 
     const { title, description } = item.snippet || {};
 
-    // כותרת
+    // כותרת (מעודכנת)
     if (titleEl) titleEl.textContent = title || "ללא כותרת";
 
     // תיאור מעובד
@@ -77,15 +78,13 @@ async function fetchYouTubeVideo(videoId) {
       descEl.setAttribute("dir", guessDir(normalized));
     }
 
-    // iframe — תמיד בין הכותרת לתיאור
-    // קודם מנקים iframes קודמים
-    section.querySelectorAll("iframe").forEach((n) => n.remove());
+    // iframe - טוען את נגן ה-YouTube
+    videoPlayerEl.innerHTML = ''; // מנקה תוכן קודם
 
     const frame = document.createElement("iframe");
-    frame.src = `https://www.youtube.com/embed/${encodeURIComponent(videoId)}`;
+    frame.src = `https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1`;
     frame.width = "100%";
-    frame.height = "520";
-    frame.style.maxWidth = "100%";
+    frame.style.aspectRatio = "16/9"; // משתמשים ב-CSS במקום גובה קבוע
     frame.loading = "lazy";
     frame.title = title || "YouTube video";
     frame.allow =
@@ -94,12 +93,8 @@ async function fetchYouTubeVideo(videoId) {
     frame.style.border = "0";
     frame.style.borderRadius = "12px";
 
-    // מכניסים את הווידאו לפני התיאור (אם יש), אחרי הכותרת
-    if (descEl) {
-      section.insertBefore(frame, descEl);
-    } else {
-      section.appendChild(frame);
-    }
+    videoPlayerEl.appendChild(frame);
+
   } catch (err) {
     console.error("שגיאה ב-YouTube API:", err);
     if (titleEl) titleEl.textContent = "שגיאה בטעינת הסרטון";
@@ -108,10 +103,11 @@ async function fetchYouTubeVideo(videoId) {
         "בדקי חיבור אינטרנט, מפתח API או מזהה וידאו, ונסי שוב.";
       descEl.style.whiteSpace = "normal";
     }
+    videoPlayerEl.innerHTML = '<p style="text-align:center;">שגיאה בנגן הוידאו.</p>';
   }
 }
 
-/* ===== פלייליסט (playlistItems) ===== */
+/* ===== פלייליסט (playlistItems) - נשמר עבור שימוש עתידי או חיצוני ===== */
 async function fetchPlaylist(playlistId, pageToken = "", maxResults = 10) {
   const base = "https://www.googleapis.com/youtube/v3/playlistItems";
   const url = `${base}?part=snippet&playlistId=${encodeURIComponent(
@@ -124,6 +120,16 @@ async function fetchPlaylist(playlistId, pageToken = "", maxResults = 10) {
   if (!res.ok) throw new Error(`Playlist HTTP ${res.status}`);
   return res.json();
 }
+//... שאר הפונקציות renderPlaylistItems ו-wirePlaylistPaging נשמרו כפי שהיו
+
+// *************
+// ⚠️ הערה חשובה:
+// בגלל ש-loadCourse.js אחראי לטעינת נתוני הקורס והשיעורים שלך מה-Backend,
+// הבלוק הזה למטה, שמנסה לטעון פלייליסט שלם מ-YouTube API אוטומטית, 
+// הפך להיות מיותר ואפילו מפריע. 
+// אם את משתמשת ב-courseContent מה-Backend שלך, עדיף להשאירו מחוץ לקוד.
+// אם את רוצה להשאיר אותו לצורך בדיקות, הוא מובא פה:
+// *************
 
 function renderPlaylistItems(items, currentVideoId) {
   const listEl = document.getElementById("playlistList");
@@ -221,39 +227,38 @@ function wirePlaylistPaging(
   }
 }
 
-/* ===== הרצה אוטומטית עם טעינת הדף ===== */
+/* ===== הרצה אוטומטית עם טעינת הדף (מומלץ לבטל אם משתמשים ב-loadCourse.js) ===== */
 document.addEventListener("DOMContentLoaded", async () => {
   const section = document.getElementById("youtubeSection");
   if (!section) return;
 
-  const initialVideoId = section.dataset.videoId || "";
+  // loadCourse.js כבר מביא את ה-videoId, אז זה פחות רלוונטי
+  const initialVideoId = section.dataset.videoId || ""; 
   const playlistId =
     section.dataset.playlistId || DEFAULT_PLAYLIST_ID;
 
-  // טוענים וידאו פתיחה אם קיים
+  // אם הוידאו והפלייליסט כבר נטענים על ידי loadCourse.js, 
+  // אפשר להשאיר את הבלוק הזה ריק או למחוק אותו כדי למנוע כפילויות.
+  
   if (initialVideoId) {
-    await fetchYouTubeVideo(initialVideoId);
+    // await fetchYouTubeVideo(initialVideoId); // loadCourse.js עושה את זה
   }
 
-  // טוענים פלייליסט
+  // טוענים פלייליסט (אם לא נטען על ידי loadCourse.js)
   if (playlistId) {
     try {
       const data = await fetchPlaylist(playlistId, "", 10);
-      renderPlaylistItems(data.items || [], initialVideoId);
-      wirePlaylistPaging(
-        playlistId,
-        data.nextPageToken,
-        data.prevPageToken,
-        initialVideoId,
-        10
-      );
+      // renderPlaylistItems(data.items || [], initialVideoId); // loadCourse.js עושה את זה
+      // wirePlaylistPaging( // loadCourse.js עושה את זה
+      //   playlistId,
+      //   data.nextPageToken,
+      //   data.prevPageToken,
+      //   initialVideoId,
+      //   10
+      // );
     } catch (e) {
-      console.error("שגיאה בטעינת פלייליסט:", e);
-      const listEl = document.getElementById("playlistList");
-      if (listEl) {
-        listEl.innerHTML =
-          '<div style="padding:12px;color:#c00;">לא ניתן לטעון את הפלייליסט</div>';
-      }
+      console.error("שגיאה בטעינת פלייליסט אוטומטי:", e);
+      // ... הצגת שגיאה
     }
   }
 });
