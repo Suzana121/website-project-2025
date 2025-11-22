@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-
+const paymentRoute = require("./routes/payment");
 // ==========================================================
 // 1. הגדרת האפליקציה (חייב להיות ראשון!)
 const app = express();
@@ -55,6 +55,7 @@ app.get('/api', (req, res) => {
   res.send('Server is running!');
 });
 
+app.use("/api/payment", paymentRoute);
 
 // ----------------------------------------------------------
 // 5. הרצת השרת
