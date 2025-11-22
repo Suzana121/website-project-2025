@@ -219,3 +219,5 @@ window.addEventListener('DOMContentLoaded', () => {
     loadUserInfo();
     loadMyCourses();
 });
+
+
