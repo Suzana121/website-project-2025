@@ -165,10 +165,15 @@ body {
     font-size: 1.3rem; /* מחיר מודגש יותר */
 }
 
+/*
+====================================
+⭐ כפתורי הוסף/הסר (עדכוני CSS)
+====================================
+*/
 .remove-btn,
 .add-btn {
-    background: #f5f5f5;
-    border: 1px solid #ddd;
+    /* סגנונות משותפים */
+    border: 1px solid;
     cursor: pointer;
     font-weight: 600;
     padding: 8px 15px;
@@ -178,18 +183,22 @@ body {
 }
 
 .remove-btn {
-    color: #dc3545;
+    color: #dc3545; /* אדום לטקסט */
+    background: #f8d7da; /* רקע אדום בהיר */
+    border-color: #f5c6cb;
 }
 
 .add-btn {
-    color: #28a745;
+    color: #28a745; /* ירוק לטקסט */
+    background: #d4edda; /* רקע ירוק בהיר */
+    border-color: #c3e6cb;
 }
 
 .remove-btn:hover {
-    background-color: #f8d7da;
+    background-color: #f5c6cb; /* אדום כהה יותר בריחוף */
 }
 .add-btn:hover {
-    background-color: #d4edda;
+    background-color: #c3e6cb; /* ירוק כהה יותר בריחוף */
 }
 
 #chosenCard{
