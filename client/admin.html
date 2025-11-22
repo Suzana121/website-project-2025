@@ -8,6 +8,27 @@
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
+    <!-- טעינת Header דינמית -->
+    <div id="header-placeholder"></div>
+
+    <script>
+    // טעינת header.html דינמית
+    fetch('header.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('header-placeholder').innerHTML = html;
+            
+            // הפעלת הסקריפטים שבתוך ההדר
+            const scripts = document.getElementById('header-placeholder').querySelectorAll('script');
+            scripts.forEach(script => {
+                const newScript = document.createElement('script');
+                newScript.textContent = script.textContent;
+                document.body.appendChild(newScript);
+            });
+        })
+        .catch(err => console.error('Failed to load header:', err));
+    </script>
+
     <div class="container">
 
        
