@@ -14,6 +14,39 @@ function logout() {
 }
 
 /**
+ * מעדכן את תפריט הניווט לפי תפקיד המשתמש
+ */
+function updateNavigationMenu(role) {
+    const mainNavContainer = document.getElementById('main-nav-container');
+    if (!mainNavContainer) return;
+
+    if (role === 'student') {
+        // סטודנט - הצגת קישור לקורסים שלי
+        mainNavContainer.innerHTML = `
+            <ul>
+                <li><a href="profile.html">הקורסים שלי</a></li>
+            </ul>
+        `;
+    } else if (role === 'admin') {
+        // מנהל - הצגת קישור לעמוד ניהול
+        mainNavContainer.innerHTML = `
+            <ul>
+                <li><a href="admin.html">ניהול</a></li>
+            </ul>
+        `;
+    } else {
+        // אורח - התפריט המקורי
+        mainNavContainer.innerHTML = `
+            <ul>
+                <li><a href="homePage.html#sec2">הקורסים שלנו</a></li>
+                <li><a href="homePage.html#sec3">יתרונות</a></li>
+                <li><a href="homePage.html#sec4">למה לבחור בנו</a></li>
+            </ul>
+        `;
+    }
+}
+
+/**
  * מציג את הסטטוס המתאים לפי תפקיד המשתמש.
  */
 function displayUserStatus() {
@@ -25,6 +58,7 @@ function displayUserStatus() {
 
     // 2. מצב: אורח (ברירת מחדל)
     if (!userJson) {
+        updateNavigationMenu('guest'); // עדכון תפריט לאורח
         userStatusContainer.innerHTML = `
             <div class="welcome-text guest-status">שלום, אורח</div>
             <a href="login.html" class="header-cta login-link">התחברות</a>
@@ -37,6 +71,9 @@ function displayUserStatus() {
         const user = JSON.parse(userJson);
         const name = user.name || 'משתמש'; 
         const role = user.role || 'student';
+
+        // עדכון תפריט הניווט לפי תפקיד
+        updateNavigationMenu(role);
 
         let linkTarget = '';
         let linkText = '';
@@ -65,6 +102,7 @@ function displayUserStatus() {
     } catch (e) {
         // במקרה של שגיאת JSON, חזור למצב אורח
         console.error('Failed to parse user data:', e);
+        updateNavigationMenu('guest'); // עדכון תפריט לאורח
         userStatusContainer.innerHTML = `
             <div class="welcome-text guest-status">שלום, אורח</div>
             <a href="login.html" class="header-cta login-link">התחברות</a>
@@ -88,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 2. הכנס את התוכן לתחילת ה-body
             document.body.insertAdjacentHTML('afterbegin', html);
             
-            // 3. הפעל את פונקציית סטטוס המשתמש
+            // 3. הפעל את פונקציית סטטוס המשתמש (שתעדכן גם את התפריט)
             displayUserStatus(); 
         })
         .catch(err => {

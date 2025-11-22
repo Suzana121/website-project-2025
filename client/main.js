@@ -1,11 +1,4 @@
 // ----------------------
-// בדיקה שה-JS נטען
-// ----------------------
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("JS נטען בהצלחה!");
-});
-
-// ----------------------
 // פונקציית בדיקה לשרת
 // ----------------------
 async function testServer() {
@@ -52,7 +45,7 @@ if (loginForm) {
                 localStorage.setItem('user', JSON.stringify(userData));
                 
                 alert("התחברת בהצלחה!");
-                window.location.href = "courses.html";
+                window.location.href = "homePage.html";
             } else {
                 alert("שגיאה בהתחברות: " + data.message);
             }
@@ -98,83 +91,89 @@ if (signupForm) {
 }
 
 // ----------------------
-// ניהול כפתורי קנייה
-// ----------------------
-document.addEventListener('DOMContentLoaded', () => {
-    const userJson = localStorage.getItem('user');
-    const isLoggedIn = !!userJson;
-
-    const courseCards = document.querySelectorAll('.course-card');
-    const cardsContainer = document.querySelector('.courses-cards');
-
-    if (!cardsContainer) return;
-
-    if (isLoggedIn) {
-        courseCards.forEach(card => {
-            const btn = card.querySelector('.buy-btn');
-            if (btn) {
-                btn.style.display = 'block'; 
-                btn.addEventListener('click', () => {
-                    window.location.href = 'paymentPage.html';
-                });
-            }
-        });
-    } else {
-        courseCards.forEach(card => {
-            const btn = card.querySelector('.buy-btn');
-            if (btn) btn.style.display = 'none';
-        });
-
-        const loginBtn = document.createElement('button');
-        loginBtn.textContent = 'לקנייה התחברו';
-        loginBtn.classList.add('login-buy-btn');
-        loginBtn.style.marginTop = '25px';
-        loginBtn.style.padding = '12px 22px';
-        loginBtn.style.fontSize = '18px';
-        loginBtn.style.borderRadius = '8px';
-        loginBtn.style.border = 'none';
-        loginBtn.style.cursor = 'pointer';
-        loginBtn.style.backgroundColor = '#6507fa';
-        loginBtn.style.color = '#fff';
-        loginBtn.style.display = 'block';
-        loginBtn.style.marginLeft = 'auto';
-        loginBtn.style.marginRight = 'auto';
-
-        loginBtn.addEventListener('click', () => {
-            window.location.href = 'login.html';
-        });
-
-        cardsContainer.insertAdjacentElement('afterend', loginBtn);
-    }
-});
-
-// ----------------------
-// טעינת רשימת קורסים
+// טעינת רשימת קורסים דינמית
 // ----------------------
 async function loadCourses() {
+    const coursesContainer = document.getElementById("courses-container");
+    
+    // אם אין container (לא בדף הבית), צא מהפונקציה
+    if (!coursesContainer) return;
+
     try {
         const response = await fetch("http://localhost:8000/api/courses");
-        const data = await response.json();
         
-        if (!data.success) {
-            console.error("שגיאה בטעינת קורסים");
+        if (!response.ok) {
+            coursesContainer.innerHTML = '<p style="text-align:center; color:#ff6b6b; width:100%; padding:40px;">שגיאה בטעינת הקורסים</p>';
             return;
         }
 
-        const courses = data.courses;
-        const coursesList = document.getElementById("coursesList");
-        if (!coursesList) return;
+        const courses = await response.json();
+        
+        // אם אין קורסים
+        if (!courses || courses.length === 0) {
+            coursesContainer.innerHTML = '<p style="text-align:center; color:#fff; width:100%; padding:40px;">אין קורסים זמינים כרגע</p>';
+            return;
+        }
 
-        coursesList.innerHTML = "";
-        courses.forEach(course => {
-            const courseDiv = document.createElement("div");
-            courseDiv.classList.add("course_item");
-            courseDiv.textContent = `${course.title} - ${course.description}`;
-            coursesList.appendChild(courseDiv);
-        });
+        // יצירת כרטיסי קורסים דינמית
+        coursesContainer.innerHTML = courses.map(course => `
+            <div class="course-card" data-id="${course._id}" data-price="${course.price || 0}">
+                <img src="${course.image || 'assets/default-course.png'}" alt="${course.title}">
+                <h3>${course.title}</h3>
+                <p>${course.tagline || course.description || 'אין תיאור זמין'}</p>
+                <div class="course-price">₪${course.price || 0}</div>
+                <button class="buy-btn" onclick="handleBuyCourse('${course._id}', ${course.price || 0})">קנו עכשיו</button>
+            </div>
+        `).join('');
+
+        // עדכון כפתורי קנייה לפי סטטוס התחברות
+        updateBuyButtons();
+
     } catch (error) {
         console.error("שגיאה בטעינת הקורסים:", error);
+        coursesContainer.innerHTML = '<p style="text-align:center; color:#ff6b6b; width:100%; padding:40px;">שגיאה בחיבור לשרת</p>';
     }
 }
 
-document.addEventListener("DOMContentLoaded", loadCourses);
+// ----------------------
+// פונקציה לטיפול בלחיצה על כפתור קנייה
+// ----------------------
+function handleBuyCourse(courseId, price) {
+    const userJson = localStorage.getItem('user');
+    
+    if (!userJson) {
+        // משתמש לא מחובר - הפניה להתחברות
+        alert('יש להתחבר כדי לרכוש קורס');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // משתמש מחובר - הפניה לתשלום
+    // שמירת מידע הקורס לסל
+    localStorage.setItem('selectedCourse', JSON.stringify({ id: courseId, price: price }));
+    window.location.href = 'paymentPage.html';
+}
+
+// ----------------------
+// עדכון כפתורי קנייה לפי סטטוס משתמש
+// ----------------------
+function updateBuyButtons() {
+    const userJson = localStorage.getItem('user');
+    const isLoggedIn = !!userJson;
+    const buyButtons = document.querySelectorAll('.buy-btn');
+
+    if (!isLoggedIn) {
+        buyButtons.forEach(btn => {
+            btn.textContent = 'התחבר לקנייה';
+            btn.style.backgroundColor = '#a92ffb';
+        });
+    }
+}
+
+// ----------------------
+// טעינה ראשונית
+// ----------------------
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("JS נטען בהצלחה!");
+    loadCourses();
+});
