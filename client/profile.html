@@ -11,7 +11,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header עם פרטי המשתמש -->
         <header class="profile-header">
             <div class="user-info">
                 <div class="user-avatar">
@@ -33,45 +32,46 @@
             </div>
         </header>
 
-        <!-- סטטיסטיקות -->
         <div class="stats-container">
             <div class="stat-card">
-                <div class="stat-icon">📚</div>
-                <div class="stat-content">
-                    <h3 id="totalCourses">0</h3>
-                    <p>קורסים שנרכשו</p>
+                <p>קורסים שנרכשו</p>
+                
+                <div class="stat-row"> 
+                    <h3 id="totalCourses">0</h3> 
+                    <div class="stat-icon">📚</div> 
                 </div>
             </div>
+
             <div class="stat-card">
-                <div class="stat-icon">🎓</div>
-                <div class="stat-content">
-                    <h3 id="memberSince">-</h3>
-                    <p>חבר מאז</p>
+                <p>חבר מאז</p>
+                
+                <div class="stat-row"> 
+                    <h3 id="memberSince">נוב' 2025</h3> 
+                    <div class="stat-icon">🎓</div> 
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">✨</div>
-                <div class="stat-content">
-                    <h3 id="userStatus">פעיל</h3>
-                    <p>סטטוס</p>
+
+            <div class="stat-card">  
+                <p>סטטוס</p>
+                
+                <div class="stat-row"> 
+                    <h3 id="userStatus">פעיל</h3> 
+                    <div class="stat-icon">✨</div> 
                 </div>
             </div>
         </div>
 
-        <!-- רשימת הקורסים -->
         <section class="courses-section">
             <div class="section-header">
                 <h2>הקורסים שלי</h2>
                 <span class="courses-count" id="coursesCount">0 קורסים</span>
             </div>
 
-            <!-- Loading -->
             <div id="loadingSpinner" class="loading">
                 <div class="spinner"></div>
                 <p>טוען קורסים...</p>
             </div>
 
-            <!-- Empty State -->
             <div id="emptyState" class="empty-state" style="display: none;">
                 <div class="empty-icon">📭</div>
                 <h3>עדיין לא רכשת קורסים</h3>
@@ -79,7 +79,6 @@
                 <button class="btn-primary" onclick="goHome()">עבור לקטלוג הקורסים</button>
             </div>
 
-            <!-- רשימת קורסים -->
             <div id="coursesList" class="courses-grid"></div>
         </section>
     </div>
