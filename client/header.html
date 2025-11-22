@@ -34,22 +34,14 @@ document.addEventListener('DOMContentLoaded', function() {
      * מעדכן את תפריט הניווט לפי תפקיד המשתמש
      */
     function updateNavigationMenu(role) {
-        if (role === 'student') {
-            // סטודנט - הצגת קישור לקורסים שלי
+        if (role === 'admin') {
+            // מנהל - תפריט ריק
             mainNavContainer.innerHTML = `
                 <ul>
-                    <li><a href="courses.html">הקורסים שלי</a></li>
-                </ul>
-            `;
-        } else if (role === 'admin') {
-            // מנהל - הצגת קישור לעמוד ניהול
-            mainNavContainer.innerHTML = `
-                <ul>
-                    <li><a href="admin.html">ניהול</a></li>
                 </ul>
             `;
         } else {
-            // אורח - התפריט המקורי
+            // סטודנט או אורח - תפריט מלא
             mainNavContainer.innerHTML = `
                 <ul>
                     <li><a href="homePage.html#sec2">הקורסים שלנו</a></li>

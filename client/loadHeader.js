@@ -20,22 +20,14 @@ function updateNavigationMenu(role) {
     const mainNavContainer = document.getElementById('main-nav-container');
     if (!mainNavContainer) return;
 
-    if (role === 'student') {
-        // סטודנט - הצגת קישור לקורסים שלי
+    if (role === 'admin') {
+        // מנהל - תפריט ריק
         mainNavContainer.innerHTML = `
             <ul>
-                <li><a href="profile.html">הקורסים שלי</a></li>
-            </ul>
-        `;
-    } else if (role === 'admin') {
-        // מנהל - הצגת קישור לעמוד ניהול
-        mainNavContainer.innerHTML = `
-            <ul>
-                <li><a href="admin.html">ניהול</a></li>
             </ul>
         `;
     } else {
-        // אורח - התפריט המקורי
+        // סטודנט או אורח - תפריט מלא
         mainNavContainer.innerHTML = `
             <ul>
                 <li><a href="homePage.html#sec2">הקורסים שלנו</a></li>
@@ -96,8 +88,6 @@ function displayUserStatus() {
                 <a href="#" onclick="logout()" class="status-link logout-link"> התנתקות</a>
             </div>
         `;
-        
-        // אין צורך בקשירת אירוע נפרדת, כי הפונקציה logout נקראת ישירות ב-onclick.
 
     } catch (e) {
         // במקרה של שגיאת JSON, חזור למצב אורח
