@@ -4,6 +4,10 @@ const Course = require('../models/course.js');
 const User = require('../models/user.js');
 const jwt = require('jsonwebtoken');
 
+// 💡 הוספה חדשה: ייבוא ה-Controller לקורסים
+// ודא שהנתיב הזה נכון לקובץ ה-Controller שלך (controllers/courseController.js)
+const courseController = require('../controllers/courseController'); 
+
 // ----------------------------------------------------
 // Middleware: אימות JWT (authenticateToken)
 // ----------------------------------------------------
@@ -17,24 +21,28 @@ const authenticateToken = (req, res, next) => {
 
   jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key', (err, user) => {
     if (err) {
-      // אם הטוקן פג תוקף או אינו תקין
       return res.status(403).json({ message: 'טוקן לא תקין או פג תוקף' });
     }
-    // הטוקן תקין, מוסיפים את נתוני המשתמש (כולל userId ו-role) לבקשה
     req.user = user;
     next();
   });
 };
 
 // ----------------------------------------------------
+// 🚀 נתיב חדש: GET /api/courses/stats/students
+// סטטיסטיקה של מספר הסטודנטים בכל קורס (מיועד לאדמין)
+// ----------------------------------------------------
+router.get('/stats/students', authenticateToken, courseController.getCourseStudentCounts); 
+// הערה: מומלץ להוסיף כאן מידלוור לבדיקת הרשאת אדמין בנוסף ל-authenticateToken.
+
+// ----------------------------------------------------
 // 🎯 GET /api/courses/all-available - מחזיר את כל הקורסים הזמינים לרכישה
 // ----------------------------------------------------
 router.get('/all-available', async (req, res) => {
   try {
-    // שליפת כל הקורסים מהדאטה בייס ללא צורך באימות (פומבי)
     const courses = await Course.find()
       .populate('instructor', 'name email')
-      .select('_id title tagline price description students image') // שדות חשובים ל-Frontend
+      .select('_id title tagline price description students image')
       .sort({ createdAt: -1 });
 
     res.json({
@@ -56,7 +64,6 @@ router.get('/all-available', async (req, res) => {
 // ----------------------------------------------------
 router.post('/purchase', authenticateToken, async (req, res) => {
     try {
-        // userId מגיע מה-JWT
         const userId = req.user.userId;
         const { courseIds } = req.body;
 
@@ -67,7 +74,6 @@ router.post('/purchase', authenticateToken, async (req, res) => {
             });
         }
 
-        // 1. מציאת כל הקורסים מתוך הרשימה שנשלחה
         const courses = await Course.find({ _id: { $in: courseIds } });
 
         if (courses.length === 0) {
@@ -77,9 +83,7 @@ router.post('/purchase', authenticateToken, async (req, res) => {
             });
         }
         
-        // 2. סינון הקורסים: מוצאים רק את אלה שהמשתמש עדיין לא רשום אליהם
         const coursesToEnroll = courses.filter(course => {
-            // ממיר את ה-ObjectIDs שבמערך students למחרוזות לצורך השוואה
             return course.students && !course.students.some(studentId => studentId.toString() === userId);
         });
         
@@ -87,14 +91,12 @@ router.post('/purchase', authenticateToken, async (req, res) => {
              return res.status(200).json({
                 success: true,
                 message: 'המשתמש כבר רשום לכל הקורסים שנבחרו.',
-                courses: courses, // מחזיר את רשימת הקורסים המלאה לצורך עדכון ה-UI
+                courses: courses,
                 count: courses.length
             });
         }
 
-        // 3. עדכון ה-DB: מוסיף את המשתמש לכל קורס חדש שנבחר
         const enrollPromises = coursesToEnroll.map(course => {
-             // שימוש ב-$push יעיל ואטומי
              return Course.updateOne(
                  { _id: course._id },
                  { $push: { students: userId } }
@@ -103,7 +105,6 @@ router.post('/purchase', authenticateToken, async (req, res) => {
 
         await Promise.all(enrollPromises);
         
-        // 4. שליפת הנתונים המעודכנים של כל הקורסים שנשלחו
         const purchasedCourses = await Course.find({ _id: { $in: courseIds } })
             .populate('instructor', 'name email');
 
@@ -130,7 +131,6 @@ router.get('/my-courses', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    // מוצא את כל הקורסים שהמשתמש רשום בהם (היכן ששדה students מכיל את ה-userId)
     const courses = await Course.find({ students: userId })
       .populate('instructor', 'name email')
       .sort({ createdAt: -1 });
@@ -151,8 +151,7 @@ router.get('/my-courses', authenticateToken, async (req, res) => {
 
 
 // ----------------------------------------------------
-// 👁️ GET /api/courses/:id - מחזיר קורס בודד (לדף single-course)
-// 🛑 שינוי: מאפשר גישה לאדמין ללא בדיקת הרשמה/תשלום.
+// 👁️ GET /api/courses/:id - מחזיר קורס בודד
 // ----------------------------------------------------
 router.get('/:id', authenticateToken, async (req, res) => {
   try {
@@ -167,23 +166,20 @@ router.get('/:id', authenticateToken, async (req, res) => {
     }
 
     const userId = req.user.userId;
-    const userRole = req.user.role; // ודא ש-role נשמר ב-Token
+    const userRole = req.user.role;
 
-    // 1. בדיקת הרשאת אדמין: אם התפקיד הוא 'admin', מאשרים גישה מיידית
     if (userRole === 'admin') {
       return res.json({
         success: true,
         course: course,
-        isEnrolled: true, // אדמין תמיד נחשב כבעל הרשאה מלאה
+        isEnrolled: true,
         isAdmin: true
       });
     }
 
-    // 2. בדיקת הרשאה לסטודנטים: בדיקה אם המשתמש רשום לקורס
     const isEnrolled = course.students.map(id => id.toString()).includes(userId);
 
     if (!isEnrolled) {
-        // אם המשתמש לא אדמין ולא רשום, חוסמים גישה
         return res.status(403).json({ 
             success: false, 
             message: 'אינך רשאי לצפות בתוכן זה. נא לרכוש את הקורס.',
@@ -191,7 +187,6 @@ router.get('/:id', authenticateToken, async (req, res) => {
         });
     }
 
-    // אם המשתמש הוא סטודנט רשום
     res.json({
       success: true,
       course: course,

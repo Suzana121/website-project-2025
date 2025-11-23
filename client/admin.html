@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
+    <div id="header-placeholder"></div>
+
     <div class="container">
 
        
@@ -21,10 +23,11 @@
         
         <div id="users-section" class="content-section active admin-section">
              <h1>ניהול מערכת</h1>
+             <div id="roleStats" style="margin-bottom: 25px;"></div>
             <h2>משתמשים רשומים</h2>
 
-            <div id="roleStats" style="margin-bottom: 25px;">
-                </div>
+            
+            
             <div class="sort-container" style="margin-bottom:15px; text-align:right;">
                 <button class="sort-dropdown-btn" id="sort-btn">
                     מיין לפי: שם ▼
@@ -62,6 +65,8 @@
         <div id="courses-section" class="content-section hidden admin-section">
             <h2>ניהול קורסים</h2>
             
+            <div id="courses-stats-container" style="margin-bottom: 25px;">
+                </div>
             <div class="courses-actions" style="margin-bottom: 20px; text-align: right;">
                 <button class="btn btn-create" id="open-create-course-btn">➕ הוסף קורס חדש</button>
             </div>

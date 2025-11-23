@@ -355,6 +355,56 @@ async function loadRoleStatistics() {
         statsContainer.innerHTML = `<p style="color: #e53e3e;">שגיאה בטעינת הסטטיסטיקה.</p>`;
     }
 }
+// admin.js (הוספה חדשה)
+
+/**
+ * טוען ומציג את סטטיסטיקת כמות הסטודנטים הרשומים לכל קורס.
+ */
+async function loadCourseStatistics() {
+    // 💡 ודאי שכתובת ה-API הזו תואמת למה שהגדרת ב-routes/courses.js וב-server.js
+    const STATS_API_URL = `${API_URL}/api/courses/stats/students`; 
+    const statsContainer = document.getElementById('courses-stats-container'); // 👈 נשתמש במיכל חדש
+
+    if (!statsContainer) return;
+
+    statsContainer.innerHTML = '<p style="text-align: center;">טוען נתוני סטטיסטיקת קורסים...</p>';
+
+    try {
+        const response = await fetch(STATS_API_URL, { headers: getAuthHeaders() });
+        
+        if (response.status === 401 || response.status === 403) { logout(); return; }
+        if (!response.ok) {
+            throw new Error(`שגיאת HTTP: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const courseStats = data.courseStats || []; // הנתונים המחושבים נמצאים תחת 'courseStats'
+        
+        if (courseStats.length === 0) {
+            statsContainer.innerHTML = '<p>לא נמצאו נתונים לקורסים רשומים.</p>';
+            return;
+        }
+
+        // יצירת טבלת סטטיסטיקה
+        let html = '<h3>👥 סטודנטים רשומים לקורס:</h3><table class="stats-table"><thead><tr><th>קורס</th><th>כמות סטודנטים</th></tr></thead><tbody>';
+        
+        courseStats.forEach(item => {
+            html += `
+                <tr>
+                    <td>${item.title || 'כותרת חסרה'}</td>
+                    <td>${item.numberOfStudents}</td>
+                </tr>
+            `;
+        });
+        
+        html += '</tbody></table>';
+        statsContainer.innerHTML = html;
+
+    } catch (error) {
+        console.error("❌ שגיאה בטעינת נתוני קורסים:", error);
+        statsContainer.innerHTML = `<p style="color: #e53e3e;">שגיאה בטעינת סטטיסטיקת הקורסים.</p>`;
+    }
+}
 
 
 // #################################################################
@@ -375,13 +425,12 @@ function switchTab(targetId) {
     if (activeBtn) activeBtn.classList.add('active');
     if (activeSection) activeSection.classList.remove('hidden');
 
-    // טעינת הנתונים הרלוונטיים לאחר מעבר
     if (targetId === 'users-section') {
         loadUsers();
-        // 🚀 הפעלת ה-Aggregation Pipeline לסטטיסטיקה של משתמשים
-        loadRoleStatistics();
+        loadRoleStatistics(); // סטטיסטיקת משתמשים קיימת
     } else if (targetId === 'courses-section') {
         loadCourses();
+        loadCourseStatistics(); // 🚀 הוספה זו
     }
 }
 

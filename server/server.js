@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const paymentRoute = require("./routes/payment");
-const userRoutes = require('./routes/count');
+
 // ==========================================================
 // 1. הגדרת האפליקציה (חייב להיות ראשון!)
 const app = express();
@@ -14,8 +14,6 @@ const app = express();
 // ----------------------------------------------------------
 // 2. הגדרת Middlewares
 // ----------------------------------------------------------
-
-// מאפשר ל-Express לטפל בנתוני JSON שנשלחים ב-Body
 app.use(express.json());
 
 // הגדרת CORS - מאפשר גישה מכל דומיין (כוכבית)
@@ -26,8 +24,6 @@ app.use(cors({
 }));
 
 // הגשת קבצים סטטיים מתיקיית client
-// זה מאפשר לגשת לקבצים כמו index.html, admin.js, CSS וכו'.
-// path.join מבטיח שהנתיב יעבוד נכון בכל מערכת הפעלה.
 app.use(express.static(path.join(__dirname, '../client')));
 
 
@@ -46,10 +42,22 @@ const authRoutes = require('./routes/auth');
 const coursesRoutes = require('./routes/courses');
 const adminRoutes = require('./routes/admin');
 
+// 🚀 תיקון 1: ייבוא נכון של Routes המשתמשים (מניח שזה routes/users.js)
+const usersRoutes = require('./routes/users'); 
+// (הערה: הסרתי את השורה const userRoutes = require('./routes/count'); שהייתה מיותרת ומבלבלת)
+
+
 // חיבור הראוטרים לנתיבי הבסיס שלהם
 app.use('/api/auth', authRoutes);     // לוגין, הרשמה
-app.use('/api/courses', coursesRoutes); // קורסים ציבוריים ושלי
-app.use('/api/admin', adminRoutes);   // ניהול קורסים ומשתמשים
+
+// 🚀 תיקון 2: חיבור Routes המשתמשים לנתיב הבסיס הנכון
+// זהו הבסיס ל-/api/users/roles/count
+app.use('/api/users', usersRoutes);   
+
+// הנתיב הזה משמש גם לבסיס של /api/courses/stats/students
+app.use('/api/courses', coursesRoutes); 
+
+app.use('/api/admin', adminRoutes);   // ניהול כללי
 
 // Route בסיסי לבדיקה
 app.get('/api', (req, res) => {

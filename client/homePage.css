@@ -50,7 +50,7 @@ button:hover {
     align-items: center;
     height: 100vh; /* שימוש ב-min-height */
     width: 100%;
-    margin-top:-90px;
+    margin-top:-100px;
     padding: 100px 50px;
     background: radial-gradient(circle farthest-corner at center center, #131060 0%, #100D58 50%, #06033E 100%);
 }
