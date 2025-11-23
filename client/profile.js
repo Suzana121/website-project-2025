@@ -129,25 +129,16 @@ function displayCourses(courses) {
     const coursesList = document.getElementById('coursesList');
     
     coursesList.innerHTML = courses.map(course => {
-        // אייקון לפי שם הקורס
         let courseIcon = '📚';
         const title = course.title || '';
         
-        if (title.includes('HTML') || title.includes('CSS')) {
-            courseIcon = '🎨';
-        } else if (title.includes('JavaScript') || title.includes('JS')) {
-            courseIcon = '💻';
-        } else if (title.includes('Node') || title.includes('Backend')) {
-            courseIcon = '⚙️';
-        } else if (title.includes('React') || title.includes('Vue') || title.includes('Angular')) {
-            courseIcon = '⚛️';
-        } else if (title.includes('Python')) {
-            courseIcon = '🐍';
-        } else if (title.includes('Database') || title.includes('SQL')) {
-            courseIcon = '🗄️';
-        }
+        if (title.includes('HTML') || title.includes('CSS')) courseIcon = '🎨';
+        else if (title.includes('JavaScript') || title.includes('JS')) courseIcon = '💻';
+        else if (title.includes('Node') || title.includes('Backend')) courseIcon = '⚙️';
+        else if (title.includes('React') || title.includes('Vue') || title.includes('Angular')) courseIcon = '⚛️';
+        else if (title.includes('Python')) courseIcon = '🐍';
+        else if (title.includes('Database') || title.includes('SQL')) courseIcon = '🗄️';
         
-        // תאריך רכישה - לוקח את updatedAt (כשהתלמיד נוסף) או createdAt
         const purchaseDate = course.updatedAt || course.createdAt
             ? new Date(course.updatedAt || course.createdAt).toLocaleDateString('he-IL', {
                 day: 'numeric',
@@ -156,35 +147,23 @@ function displayCourses(courses) {
               })
             : 'לא זמין';
         
-        // שם המרצה
-        const instructorName = course.instructor?.name || 'לא ידוע';
-        
-        // מספר תלמידים
         const studentsCount = course.students?.length || 0;
         
         return `
             <div class="course-card" onclick="goToCourse('${course._id}')">
-                <div class="course-image">
-                    ${courseIcon}
-                </div>
+                <div class="course-image">${courseIcon}</div>
                 <div class="course-content">
                     <h3>${course.title || 'ללא כותרת'}</h3>
                     <p>${course.description || 'תיאור הקורס יעודכן בקרוב'}</p>
                     <div class="course-meta">
-                        <div class="course-instructor">
-                            👨‍🏫 ${instructorName}
-                        </div>
-                        <div class="course-students">
-                            👥 ${studentsCount} משתתפים
-                        </div>
+                        <div class="course-students">👥 ${studentsCount} משתתפים</div>
                     </div>
-                    <div class="course-date">
-                        📅 נרכש ב: ${purchaseDate}
-                    </div>
+                    <div class="course-date">📅 נרכש ב: ${purchaseDate}</div>
                     <div class="course-footer">
                         <div class="course-price">₪${course.price || 0}</div>
                         <button class="btn-course" onclick="event.stopPropagation(); goToCourse('${course._id}')">
-                            כניסה לקורס →
+                            כניסה לקורס ←
+                            
                         </button>
                     </div>
                 </div>
@@ -192,7 +171,6 @@ function displayCourses(courses) {
         `;
     }).join('');
 }
-
 
 // מעבר לקורס ספציפי (מעודכן ומתוקן לנתיב מוחלט)
 function goToCourse(courseId) {
@@ -219,3 +197,5 @@ window.addEventListener('DOMContentLoaded', () => {
     loadUserInfo();
     loadMyCourses();
 });
+
+

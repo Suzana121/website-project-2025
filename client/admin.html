@@ -8,27 +8,6 @@
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-    <!-- טעינת Header דינמית -->
-    <div id="header-placeholder"></div>
-
-    <script>
-    // טעינת header.html דינמית
-    fetch('header.html')
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('header-placeholder').innerHTML = html;
-            
-            // הפעלת הסקריפטים שבתוך ההדר
-            const scripts = document.getElementById('header-placeholder').querySelectorAll('script');
-            scripts.forEach(script => {
-                const newScript = document.createElement('script');
-                newScript.textContent = script.textContent;
-                document.body.appendChild(newScript);
-            });
-        })
-        .catch(err => console.error('Failed to load header:', err));
-    </script>
-
     <div class="container">
 
        
@@ -44,6 +23,8 @@
              <h1>ניהול מערכת</h1>
             <h2>משתמשים רשומים</h2>
 
+            <div id="roleStats" style="margin-bottom: 25px;">
+                </div>
             <div class="sort-container" style="margin-bottom:15px; text-align:right;">
                 <button class="sort-dropdown-btn" id="sort-btn">
                     מיין לפי: שם ▼
@@ -106,8 +87,8 @@
                     <label for="course-price">מחיר (₪):</label>
                     <input type="number" id="course-price" step="0.01" required>
 
-                    <label for="course-image">קישור לתמונת קורס (URL):</label>
-                    <input type="url" id="course-image">
+                    <label for="course-image">תמונת קורס (URL או נתיב יחסי):</label>
+                    <input type="text" id="course-image" placeholder="למשל: assets/html css.png או https://...">
                     
                     <div class="form-actions">
                          <button type="submit" class="btn btn-save" id="save-course-btn">שמור קורס</button>
@@ -115,7 +96,7 @@
                     </div>
                 </form>
             </div>
-            </div>
+        </div>
 
     </div>
     <script src="admin.js"></script>

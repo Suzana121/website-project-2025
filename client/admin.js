@@ -307,6 +307,57 @@ async function deleteCourse(id) {
 
 
 // #################################################################
+// ############# לוגיקה לסטטיסטיקה (Aggregation) ####################
+// #################################################################
+
+async function loadRoleStatistics() {
+    const STATS_API_URL = `${API_URL}/api/users/roles/count`; 
+    const statsContainer = document.getElementById('roleStats'); // נניח שיש אלמנט זה ב-HTML
+    
+    if (!statsContainer) return; 
+    
+    statsContainer.innerHTML = '<p style="text-align: center;">טוען נתונים סטטיסטיים...</p>';
+    
+    try {
+        // חשוב לשלוח headers כי זה דף אדמין
+        const response = await fetch(STATS_API_URL, { headers: getAuthHeaders() });
+        
+        if (response.status === 401 || response.status === 403) { logout(); return; } // אם אימות נכשל
+        if (!response.ok) {
+            throw new Error(`שגיאת HTTP: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const roleCounts = data.stats || []; // הנתונים המחושבים נמצאים תחת 'stats'
+        
+        if (roleCounts.length === 0) {
+            statsContainer.innerHTML = '<p>לא נמצאו נתונים לספירת תפקידים.</p>';
+            return;
+        }
+
+        // יצירת טבלת סטטיסטיקה
+        let html = '<h3>👤 ספירת תפקידי משתמשים:</h3><table class="stats-table"><thead><tr><th>תפקיד</th><th>כמות</th></tr></thead><tbody>';
+        
+        roleCounts.forEach(item => {
+            html += `
+                <tr>
+                    <td>${getRoleText(item._id)}</td>
+                    <td>${item.count}</td>
+                </tr>
+            `;
+        });
+        
+        html += '</tbody></table>';
+        statsContainer.innerHTML = html;
+
+    } catch (error) {
+        console.error("❌ שגיאה בטעינת נתוני תפקידים:", error);
+        statsContainer.innerHTML = `<p style="color: #e53e3e;">שגיאה בטעינת הסטטיסטיקה.</p>`;
+    }
+}
+
+
+// #################################################################
 // ############# ניווט וטעינה ראשונית ################################
 // #################################################################
 
@@ -327,6 +378,8 @@ function switchTab(targetId) {
     // טעינת הנתונים הרלוונטיים לאחר מעבר
     if (targetId === 'users-section') {
         loadUsers();
+        // 🚀 הפעלת ה-Aggregation Pipeline לסטטיסטיקה של משתמשים
+        loadRoleStatistics();
     } else if (targetId === 'courses-section') {
         loadCourses();
     }

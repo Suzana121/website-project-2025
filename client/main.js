@@ -107,24 +107,33 @@ async function loadCourses() {
             return;
         }
 
-        const courses = await response.json();
+        const data = await response.json();
+        
+        // קבלת מערך הקורסים מתוך האובייקט
+        const courses = data.courses || data;
         
         // אם אין קורסים
-        if (!courses || courses.length === 0) {
+        if (!courses || !Array.isArray(courses) || courses.length === 0) {
             coursesContainer.innerHTML = '<p style="text-align:center; color:#fff; width:100%; padding:40px;">אין קורסים זמינים כרגע</p>';
             return;
         }
 
         // יצירת כרטיסי קורסים דינמית
-        coursesContainer.innerHTML = courses.map(course => `
+        coursesContainer.innerHTML = courses.map(course => {
+            // טיפול בנתיב התמונה - תמיכה בנתיבים יחסיים וב-URLs מלאים
+            let imageSrc = course.image || 'assets/default-course.png';
+            // אם זה נתיב יחסי (לא מתחיל ב-http), לא צריך לשנות כלום
+            
+            return `
             <div class="course-card" data-id="${course._id}" data-price="${course.price || 0}">
-                <img src="${course.image || 'assets/default-course.png'}" alt="${course.title}">
+                <img src="${imageSrc}" alt="${course.title}" onerror="this.src='assets/default-course.png'">
                 <h3>${course.title}</h3>
                 <p>${course.tagline || course.description || 'אין תיאור זמין'}</p>
                 <div class="course-price">₪${course.price || 0}</div>
                 <button class="buy-btn" onclick="handleBuyCourse('${course._id}', ${course.price || 0})">קנו עכשיו</button>
             </div>
-        `).join('');
+            `;
+        }).join('');
 
         // עדכון כפתורי קנייה לפי סטטוס התחברות
         updateBuyButtons();

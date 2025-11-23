@@ -18,13 +18,6 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Middleware לבדיקת הרשאות מדריך
-const isInstructor = (req, res, next) => {
-  if (req.user.role !== 'instructor') {
-    return res.status(403).json({ message: 'גישה מוגבלת למדריכים בלבד' });
-  }
-  next();
-};
 
 // Middleware לבדיקת הרשאות תלמיד
 const isStudent = (req, res, next) => {

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const paymentRoute = require("./routes/payment");
+const userRoutes = require('./routes/count');
 // ==========================================================
 // 1. הגדרת האפליקציה (חייב להיות ראשון!)
 const app = express();
