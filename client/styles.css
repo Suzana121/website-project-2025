@@ -577,3 +577,38 @@ h2 {
     order: -1;
   }
 }
+
+
+
+/* פריסת אזור הווידאו בדף קורס בודד */
+.course-video {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* המכלול של הווידאו/iframe או הפלייסהולדר */
+#videoPlayer {
+  width: 100%;
+}
+
+/* פלייסהולדר לפני שנבחר שיעור */
+.video-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.1rem;
+  text-align: center;
+  padding: 10px;
+}
+
+/* אופציונלי – הדגשת שיעור נבחר בפלייליסט */
+.playlist-item.active {
+  background-color: rgba(101, 7, 250, 0.1);
+  border-right: 4px solid #6507FA;
+}
