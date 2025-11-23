@@ -80,21 +80,53 @@
                 <form id="course-form" class="edit-form">
                     <input type="hidden" id="course-id">
                     
-                    <label for="course-title">כותרת הקורס:</label>
-                    <input type="text" id="course-title" required>
+                    <div class="form-group">
+                        <div id="error-title" class="validation-error hidden"></div>
+                        <label for="course-title">כותרת הקורס:</label>
+                        <input type="text" id="course-title" name="title" required minlength="2">
+                    </div>
                     
-                    <label for="course-tagline">כותרת משנה/תקציר:</label>
-                    <input type="text" id="course-tagline">
+                    <div class="form-group">
+                        <div id="error-tagline" class="validation-error hidden"></div>
+                        <label for="course-tagline">כותרת משנה/תקציר:</label>
+                        <input type="text" id="course-tagline" name="tagline">
+                    </div>
                     
-                    <label for="course-description">תיאור מלא:</label>
-                    <textarea id="course-description" rows="4"></textarea>
+                    <div class="form-group">
+                        <div id="error-description" class="validation-error hidden"></div>
+                        <label for="course-description">תיאור מלא:</label>
+                        <textarea id="course-description" name="description" rows="4" required minlength="10"></textarea>
+                    </div>
 
-                    <label for="course-price">מחיר (₪):</label>
-                    <input type="number" id="course-price" step="0.01" required>
+                    <div class="form-group">
+                        <div id="error-price" class="validation-error hidden"></div>
+                        <label for="course-price">מחיר (₪):</label>
+                        <input type="number" id="course-price" name="price" step="0.01" required min="0">
+                    </div>
 
-                    <label for="course-image">תמונת קורס (URL או נתיב יחסי):</label>
-                    <input type="text" id="course-image" placeholder="למשל: assets/html css.png או https://...">
+                    <div class="form-group">
+                        <div id="error-image" class="validation-error hidden"></div>
+                        <label for="course-image">תמונת קורס (URL או נתיב יחסי):</label>
+                        <input type="text" id="course-image" name="image" placeholder="למשל: assets/html css.png או https://...">
+                    </div>
                     
+
+                    
+                    <hr style="margin: 25px 0;">
+
+                    <h3>🎥 ניהול שיעורים (Course Content)</h3>
+                    <p style="font-size: 0.9em; color: #555;">הזן/י את פרטי כל שיעור. מספר השיעור נקבע אוטומטית.</p>
+
+                    <div id="error-course-content" class="validation-error hidden"></div>
+                    
+                    <div id="course-content-container">
+                        </div>
+
+                    <button type="button" class="btn btn-secondary" onclick="addLessonRow()">➕ הוסף שיעור</button>
+
+                    <hr style="margin: 25px 0;">
+
+
                     <div class="form-actions">
                          <button type="submit" class="btn btn-save" id="save-course-btn">שמור קורס</button>
                          <button type="button" class="btn btn-delete" onclick="closeCourseForm()">בטל</button>

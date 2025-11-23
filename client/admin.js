@@ -1,5 +1,7 @@
 const API_URL = 'http://localhost:8000';
 const messageDiv = document.getElementById('message');
+// 💡 URL לתמונת ברירת המחדל
+const DEFAULT_IMAGE = 'https://lh5.googleusercontent.com/proxy/oT48EWWGPA0l7fTkdUiAI26WAvE8TTB5oKeL1fLVK93Vi28Y-KDvpM9Vr2Prb6B960JysGyorjg7X8TY2jchWBNfmdX9NvBn7ZAsPulWo3ejTAErlCbFEW275iBbbXmE_ckUYERKjfw'; 
 
 // אלמנטים ניהול משתמשים
 const usersList = document.getElementById('users-list');
@@ -11,7 +13,9 @@ const courseForm = document.getElementById('course-form');
 const formTitle = document.getElementById('form-title');
 const saveCourseBtn = document.getElementById('save-course-btn');
 const openCreateCourseBtn = document.getElementById('open-create-course-btn');
-let currentEditCard = null; // משתנה לשמירת כרטיס הקורס הנערך
+// 💡 אלמנט חדש: קונטיינר לשיעורים
+const courseContentContainer = document.getElementById('course-content-container'); 
+let currentEditCard = null; 
 
 let loadedUsers = [];
 let loadedCourses = [];
@@ -165,23 +169,28 @@ function displayCourses(courses){
         return;
     }
 
-    const cardsHtml = courses.map(c => `
-        <div class="course-card" id="card-${c._id}">
-            <div class="course-info">
-                <img src="${c.image || 'placeholder.png'}" alt="${c.title}">
-                <div class="course-details">
-                    <h3>${c.title}</h3>
-                    <p>${c.tagline || ''}</p>
-                    <p>מאת: ${c.instructor?.name || 'מנהל מערכת'} | מחיר: ${(c.price || 0).toFixed(2)} ₪</p>
+    const cardsHtml = courses.map(c => {
+        // 🚀 שימוש בתמונה דיפולטיבית אם אין תמונה
+        const imageUrl = c.image || DEFAULT_IMAGE; 
+
+        return `
+            <div class="course-card" id="card-${c._id}">
+                <div class="course-info">
+                    <img src="${imageUrl}" alt="${c.title}">
+                    <div class="course-details">
+                        <h3>${c.title}</h3>
+                        <p>${c.tagline || ''}</p>
+                        <p>מאת: ${c.instructor?.name || 'מנהל מערכת'} | מחיר: ${(c.price || 0).toFixed(2)} ₪</p>
+                    </div>
+                </div>
+                <div class="course-actions">
+                    <button class="btn btn-view" onclick="viewCourse('${c._id}')">צפייה</button> 
+                    <button class="btn btn-edit" onclick="openCourseForm('edit', '${c._id}')">ערוך</button>
+                    <button class="btn btn-delete" onclick="deleteCourse('${c._id}')">מחק</button>
                 </div>
             </div>
-            <div class="course-actions">
-                <button class="btn btn-view" onclick="viewCourse('${c._id}')">צפייה</button> 
-                <button class="btn btn-edit" onclick="openCourseForm('edit', '${c._id}')">ערוך</button>
-                <button class="btn btn-delete" onclick="deleteCourse('${c._id}')">מחק</button>
-            </div>
-        </div>
-    `).join(''); // ⬅️ כפתור 'תוכן' הוסר כאן
+        `;
+    }).join(''); 
 
     coursesListContainer.innerHTML = cardsHtml;
 }
@@ -197,7 +206,6 @@ openCreateCourseBtn.addEventListener('click', () => {
  * פותחת את דף הקורס בחלון חדש.
  */
 function viewCourse(courseId) {
-    // 💡 מניח שדף הקורס הוא course.html והוא מקבל ID כפרמטר
     window.open(`single-course.html?id=${courseId}`, '_blank');
 }
 
@@ -206,6 +214,8 @@ function viewCourse(courseId) {
  * מנהל את פתיחת טופס העריכה/יצירה ה-Inline.
  */
 function openCourseForm(mode, id = '') {
+    clearValidationErrors(); 
+    
     const course = loadedCourses.find(c => c._id === id);
     
     // סגור את הטופס אם הוא כבר פתוח על אותו כרטיס
@@ -217,24 +227,36 @@ function openCourseForm(mode, id = '') {
     courseForm.reset();
     document.getElementById('course-id').value = id;
     
-    // עדכון כותרת וכפתור שמירה
+    // 💡 ניקוי וטעינת שיעורים
+    courseContentContainer.innerHTML = '';
+    
     if (mode === 'create') {
         formTitle.textContent = 'יצירת קורס חדש';
         saveCourseBtn.textContent = 'צור קורס';
-        // הכנס את הטופס בסוף הרשימה
         coursesListContainer.parentNode.insertBefore(courseFormContainer, coursesListContainer.nextSibling);
         currentEditCard = null;
+        // 💡 הוסף שורת שיעור ריקה להתחלה
+        addLessonRow(); 
 
     } else {
         formTitle.textContent = 'עריכת קורס קיים';
         saveCourseBtn.textContent = 'עדכן קורס';
         
-        // מילוי הנתונים
+        // 🚀 מילוי נתונים קיימים
         document.getElementById('course-title').value = course.title || '';
         document.getElementById('course-tagline').value = course.tagline || '';
         document.getElementById('course-description').value = course.description || '';
-        document.getElementById('course-price').value = course.price || 0;
+        document.getElementById('course-price').value = course.price !== undefined ? course.price : 0; 
         document.getElementById('course-image').value = course.image || '';
+
+        
+        // 💡 טעינת נתוני שיעורים קיימים
+        if (course.courseContent && course.courseContent.length) {
+            course.courseContent.forEach(lesson => injectLessonRow(lesson));
+        } else {
+            addLessonRow(); // אם אין שיעורים, הוסף שורה ריקה
+        }
+
 
         // הכנס את הטופס מתחת לכרטיס הקורס הנבחר
         currentEditCard = document.getElementById(`card-${id}`);
@@ -248,24 +270,206 @@ function openCourseForm(mode, id = '') {
 function closeCourseForm() {
     courseFormContainer.classList.add('hidden');
     currentEditCard = null;
+    clearValidationErrors(); 
 }
+
+// ----------------------------------------------------
+// 💡 פונקציות לניהול שורות שיעורים
+// ----------------------------------------------------
+
+/**
+ * בונה ומזריקה שורת קלט של שיעור לטופס.
+ * @param {Object} lessonData - אובייקט עם נתוני שיעור קיימים (אופציונלי).
+ */
+function injectLessonRow(lessonData = {}) {
+    const row = document.createElement('div');
+    row.classList.add('lesson-row');
+    row.style.display = 'flex';
+    row.style.gap = '10px';
+    row.style.marginBottom = '10px';
+    row.style.alignItems = 'center';
+    row.style.border = '1px solid #ccc';
+    row.style.padding = '8px';
+    row.style.borderRadius = '4px';
+
+    // lessonId מושבת כדי למנוע עריכה ידנית, אבל אנחנו נעדכן אותו אוטומטית.
+    const lessonId = lessonData.lessonId || (courseContentContainer.children.length + 1);
+    
+    // יצירת הקלטים
+    row.innerHTML = `
+        <input type="number" name="lessonId" value="${lessonId}" placeholder="מס' שיעור" required min="1" style="width: 80px;" disabled>
+        <input type="text" name="title" value="${lessonData.title || ''}" placeholder="כותרת השיעור" required style="flex-grow: 1;">
+        <input type="text" name="videoId" value="${lessonData.videoId || ''}" placeholder="YouTube ID" required style="width: 150px;">
+        <input type="text" name="duration" value="${lessonData.duration || ''}" placeholder="משך (HH:MM:SS)" required style="width: 120px;">
+        <button type="button" class="btn btn-delete btn-sm" onclick="removeLessonRow(this)">❌</button>
+    `;
+
+    courseContentContainer.appendChild(row);
+}
+
+/**
+ * מוסיף שורת שיעור ריקה חדשה.
+ */
+function addLessonRow() {
+    injectLessonRow({});
+    // יש לוודא עדכון מספרי השיעורים לאחר הוספה
+    updateLessonIds(); 
+}
+
+/**
+ * מסיר שורת שיעור מהטופס ומעדכן את מספרי השיעורים.
+ * @param {HTMLElement} button - כפתור המחיקה שנלחץ.
+ */
+function removeLessonRow(button) {
+    const row = button.closest('.lesson-row');
+    if (row) {
+        row.remove();
+        // עדכון מספרי השיעורים לאחר מחיקה (lessonId)
+        updateLessonIds();
+    }
+}
+
+/**
+ * מוודא שמספרי השיעורים (lessonId) עוקבים ונכונים.
+ */
+function updateLessonIds() {
+    Array.from(courseContentContainer.children).forEach((row, index) => {
+        const lessonIdInput = row.querySelector('input[name="lessonId"]');
+        if (lessonIdInput) {
+            lessonIdInput.value = index + 1;
+        }
+    });
+}
+
+
+// ----------------------------------------------------
+// 💡 פונקציות עזר לאימות בצד לקוח
+// ----------------------------------------------------
+
+/**
+ * מציג הודעת שגיאה ב-div המתאים מעל השדה.
+ * @param {string} fieldName - ה-ID של השגיאה (למשל, 'title').
+ * @param {string} message - ההודעה להצגה.
+ */
+function displayValidationError(fieldName, message) {
+    const errorDiv = document.getElementById(`error-${fieldName}`);
+    if (errorDiv) {
+        errorDiv.textContent = message;
+        errorDiv.classList.remove('hidden');
+    }
+}
+
+/**
+ * מנקה את כל הודעות השגיאה בטופס הקורסים.
+ */
+function clearValidationErrors() {
+    document.querySelectorAll('.validation-error').forEach(div => {
+        div.textContent = '';
+        div.classList.add('hidden');
+    });
+    // מנקה את הגבולות האדומים של שורות השיעורים
+    document.querySelectorAll('.lesson-row').forEach(row => {
+        row.style.border = '1px solid #ccc';
+    });
+}
+
 
 // פונקציית שמירה/עדכון קורס
 courseForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    clearValidationErrors(); // 1. מנקה שגיאות קודמות
     
     const id = document.getElementById('course-id').value;
     const method = id ? 'PUT' : 'POST';
     const endpoint = id ? `${API_URL}/api/admin/courses/${id}` : `${API_URL}/api/admin/courses`;
     
+    // 2. איסוף נתונים לאימות ושיעורים
+    const title = document.getElementById('course-title').value.trim();
+    const tagline = document.getElementById('course-tagline').value.trim();
+    const description = document.getElementById('course-description').value.trim();
+    const priceInput = document.getElementById('course-price').value;
+    const price = parseFloat(priceInput);
+    const image = document.getElementById('course-image').value.trim();
+
+    // 💡 איסוף מערך השיעורים
+    const courseContent = [];
+    let lessonHasError = false;
+
+    Array.from(courseContentContainer.children).forEach(row => {
+        const lessonInputs = row.querySelectorAll('input');
+        const lesson = {};
+        let isValidRow = true;
+
+        lessonInputs.forEach(input => {
+            if (input.name) {
+                const val = input.value.trim();
+                lesson[input.name] = input.name === 'lessonId' ? parseInt(val) : val;
+                
+                // בדיקת שדות השיעור
+                if (val.length === 0 && input.name !== 'lessonId') { // lessonId הוא רק תצוגה
+                    isValidRow = false;
+                    lessonHasError = true;
+                }
+            }
+        });
+
+        if (isValidRow) {
+            courseContent.push(lesson);
+            row.style.border = '1px solid #ccc'; // מנקה גבול אדום אם תקין
+        } else {
+            row.style.border = '2px solid red'; // מסמן שורה לא תקינה
+        }
+    });
+    
+    // 3. 🚨 אימות צד לקוח (Client-Side Validation) 🚨
+    let hasError = false;
+
+    // A. כותרת
+    if (title.length < 2) { displayValidationError('title', '❌ כותרת הקורס חייבת להיות באורך של 2 תווים לפחות.'); hasError = true; }
+    
+    // B. כותרת משנה (חובה)
+    if (tagline.length < 5) { displayValidationError('tagline', '❌ כותרת המשנה (תקציר) חייבת להיות באורך של 5 תווים לפחות.'); hasError = true; }
+
+    // C. תיאור
+    if (description.length < 10) { displayValidationError('description', '❌ התיאור המלא חייב להיות באורך של 10 תווים לפחות.'); hasError = true; }
+    
+    // D. מחיר
+    if (!priceInput || isNaN(price) || price < 0) { displayValidationError('price', '❌ המחיר חייב להיות מספר חיובי תקין (אפס מותר).'); hasError = true; }
+    
+    // E. תמונה (חובה)
+    if (image.length === 0) { displayValidationError('image', '❌ יש לספק כתובת URL לתמונת הקורס.'); hasError = true; }
+
+
+    // 💡 בדיקת שגיאות שיעור
+    if (courseContentContainer.children.length === 0) {
+        // אם אין שום שיעור
+        displayValidationError('course-content', '❌ חייבים להוסיף לפחות שיעור אחד לתוכן הקורס.');
+        hasError = true;
+    } else if (lessonHasError) {
+        // אם יש שיעורים אבל אחד מהם לא תקין
+        displayValidationError('course-content', '❌ יש למלא את כל השדות בכל שורות השיעורים המסומנות באדום.');
+        hasError = true;
+    }
+    
+    
+    // אם נמצאו שגיאות, עוצרים את השליחה
+    if (hasError) {
+        courseFormContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+    }
+
+    // 4. יצירת אובייקט הנתונים עם מערך השיעורים
     const courseData = {
-        title: document.getElementById('course-title').value,
-        tagline: document.getElementById('course-tagline').value,
-        description: document.getElementById('course-description').value,
-        price: parseFloat(document.getElementById('course-price').value),
-        image: document.getElementById('course-image').value,
+        title: title,
+        tagline: tagline,
+        description: description,
+        price: price,
+        image: image,
+        // 💡 הוספת המערך courseContent
+        courseContent: courseContent 
     };
     
+    // 5. שליחה לשרת
     try {
         const res = await fetch(endpoint, {
             method: method,
@@ -312,23 +516,22 @@ async function deleteCourse(id) {
 
 async function loadRoleStatistics() {
     const STATS_API_URL = `${API_URL}/api/users/roles/count`; 
-    const statsContainer = document.getElementById('roleStats'); // נניח שיש אלמנט זה ב-HTML
+    const statsContainer = document.getElementById('roleStats'); 
     
     if (!statsContainer) return; 
     
     statsContainer.innerHTML = '<p style="text-align: center;">טוען נתונים סטטיסטיים...</p>';
     
     try {
-        // חשוב לשלוח headers כי זה דף אדמין
         const response = await fetch(STATS_API_URL, { headers: getAuthHeaders() });
         
-        if (response.status === 401 || response.status === 403) { logout(); return; } // אם אימות נכשל
+        if (response.status === 401 || response.status === 403) { logout(); return; }
         if (!response.ok) {
             throw new Error(`שגיאת HTTP: ${response.status}`);
         }
         
         const data = await response.json();
-        const roleCounts = data.stats || []; // הנתונים המחושבים נמצאים תחת 'stats'
+        const roleCounts = data.stats || []; 
         
         if (roleCounts.length === 0) {
             statsContainer.innerHTML = '<p>לא נמצאו נתונים לספירת תפקידים.</p>';
@@ -355,15 +558,14 @@ async function loadRoleStatistics() {
         statsContainer.innerHTML = `<p style="color: #e53e3e;">שגיאה בטעינת הסטטיסטיקה.</p>`;
     }
 }
-// admin.js (הוספה חדשה)
+
 
 /**
  * טוען ומציג את סטטיסטיקת כמות הסטודנטים הרשומים לכל קורס.
  */
 async function loadCourseStatistics() {
-    // 💡 ודאי שכתובת ה-API הזו תואמת למה שהגדרת ב-routes/courses.js וב-server.js
     const STATS_API_URL = `${API_URL}/api/courses/stats/students`; 
-    const statsContainer = document.getElementById('courses-stats-container'); // 👈 נשתמש במיכל חדש
+    const statsContainer = document.getElementById('courses-stats-container'); 
 
     if (!statsContainer) return;
 
@@ -378,7 +580,7 @@ async function loadCourseStatistics() {
         }
         
         const data = await response.json();
-        const courseStats = data.courseStats || []; // הנתונים המחושבים נמצאים תחת 'courseStats'
+        const courseStats = data.courseStats || []; 
         
         if (courseStats.length === 0) {
             statsContainer.innerHTML = '<p>לא נמצאו נתונים לקורסים רשומים.</p>';
@@ -427,10 +629,10 @@ function switchTab(targetId) {
 
     if (targetId === 'users-section') {
         loadUsers();
-        loadRoleStatistics(); // סטטיסטיקת משתמשים קיימת
+        loadRoleStatistics(); 
     } else if (targetId === 'courses-section') {
         loadCourses();
-        loadCourseStatistics(); // 🚀 הוספה זו
+        loadCourseStatistics(); 
     }
 }
 
